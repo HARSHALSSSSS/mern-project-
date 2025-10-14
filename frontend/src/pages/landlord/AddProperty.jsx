@@ -1,0 +1,184 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaHome, FaDollarSign, FaBed, FaBath, FaRuler, FaMapMarkerAlt, FaImage } from 'react-icons/fa';
+import axios from 'axios';
+
+const AddProperty = () => {
+  const navigate = useNavigate();
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    title: '', type: 'apartment', description: '', bedrooms: 1, bathrooms: 1, squareFeet: 0,
+    rent: { amount: 0, currency: 'USD', paymentFrequency: 'monthly' },
+    address: { street: '', city: '', state: '', zipCode: '', country: 'USA' },
+    amenities: [], utilities: [], petPolicy: 'not-allowed', parkingSpaces: 0,
+  });
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const data = new FormData();
+      Object.keys(formData).forEach(key => {
+        if (typeof formData[key] === 'object' && !Array.isArray(formData[key])) {
+          Object.keys(formData[key]).forEach(subKey => data.append(`${key}.${subKey}`, formData[key][subKey]));
+        } else if (Array.isArray(formData[key])) {
+          formData[key].forEach(item => data.append(key, item));
+        } else {
+          data.append(key, formData[key]);
+        }
+      });
+      images.forEach(img => data.append('images', img));
+      
+      await axios.post('/api/properties', data);
+      navigate('/landlord/properties');
+    } catch (error) {
+      console.error('Failed to create property:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const amenitiesList = ['WiFi', 'Parking', 'Gym', 'Pool', 'Laundry', 'AC', 'Heating', 'Elevator', 'Balcony', 'Garden'];
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Property</h1>
+        <p className="text-gray-600">Fill in the details to list your property</p>
+      </div>
+
+      <div className="mb-8">
+        <div className="flex items-center justify-between">
+          {[1, 2, 3].map(s => (
+            <div key={s} className="flex items-center">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${step >= s ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'}`}>{s}</div>
+              {s < 3 && <div className={`w-32 h-1 ${step > s ? 'bg-blue-600' : 'bg-gray-300'}`}></div>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
+        {step === 1 && (
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold mb-4">Basic Information</h3>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Property Title *</label>
+              <input type="text" required value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="e.g., Modern 2BR Apartment Downtown" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Type *</label>
+                <select required value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                  <option value="apartment">Apartment</option>
+                  <option value="house">House</option>
+                  <option value="villa">Villa</option>
+                  <option value="studio">Studio</option>
+                  <option value="condo">Condo</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Monthly Rent *</label>
+                <input type="number" required value={formData.rent.amount} onChange={(e) => setFormData({...formData, rent: {...formData.rent, amount: parseInt(e.target.value)}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="2000" />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Bedrooms *</label>
+                <input type="number" required min="0" value={formData.bedrooms} onChange={(e) => setFormData({...formData, bedrooms: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Bathrooms *</label>
+                <input type="number" required min="0" value={formData.bathrooms} onChange={(e) => setFormData({...formData, bathrooms: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Sq Ft *</label>
+                <input type="number" required value={formData.squareFeet} onChange={(e) => setFormData({...formData, squareFeet: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
+              <textarea required rows="4" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Describe your property..." />
+            </div>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold mb-4">Location & Amenities</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Street Address *</label>
+                <input type="text" required value={formData.address.street} onChange={(e) => setFormData({...formData, address: {...formData.address, street: e.target.value}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">City *</label>
+                <input type="text" required value={formData.address.city} onChange={(e) => setFormData({...formData, address: {...formData.address, city: e.target.value}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">State *</label>
+                <input type="text" required value={formData.address.state} onChange={(e) => setFormData({...formData, address: {...formData.address, state: e.target.value}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">ZIP Code *</label>
+                <input type="text" required value={formData.address.zipCode} onChange={(e) => setFormData({...formData, address: {...formData.address, zipCode: e.target.value}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Amenities</label>
+              <div className="grid grid-cols-3 gap-3">
+                {amenitiesList.map(a => (
+                  <label key={a} className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={formData.amenities.includes(a)} onChange={(e) => setFormData({...formData, amenities: e.target.checked ? [...formData.amenities, a] : formData.amenities.filter(x => x !== a)})} className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm">{a}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Pet Policy</label>
+                <select value={formData.petPolicy} onChange={(e) => setFormData({...formData, petPolicy: e.target.value})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                  <option value="not-allowed">Not Allowed</option>
+                  <option value="cats-only">Cats Only</option>
+                  <option value="dogs-only">Dogs Only</option>
+                  <option value="allowed">All Pets Allowed</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Parking Spaces</label>
+                <input type="number" min="0" value={formData.parkingSpaces} onChange={(e) => setFormData({...formData, parkingSpaces: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold mb-4">Property Images</h3>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+              <FaImage className="text-6xl text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600 mb-4">Upload property images (up to 10)</p>
+              <input type="file" multiple accept="image/*" onChange={(e) => setImages(Array.from(e.target.files))} className="hidden" id="images" />
+              <label htmlFor="images" className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer">Choose Images</label>
+              {images.length > 0 && <p className="text-green-600 mt-4 font-semibold">{images.length} image(s) selected</p>}
+            </div>
+          </div>
+        )}
+
+        <div className="flex gap-3 pt-6 border-t mt-6">
+          {step > 1 && <button type="button" onClick={() => setStep(step - 1)} className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Back</button>}
+          {step < 3 ? (
+            <button type="button" onClick={() => setStep(step + 1)} className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Next</button>
+          ) : (
+            <button type="submit" disabled={loading} className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50">{loading ? 'Creating...' : 'Create Property'}</button>
+          )}
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default AddProperty;

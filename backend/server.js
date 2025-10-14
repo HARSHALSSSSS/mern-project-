@@ -68,6 +68,7 @@ app.use('/api/contracts', require('./routes/contractRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
 app.use('/api/maintenance', require('./routes/maintenanceRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
+app.use('/api/setup', require('./routes/setupRoutes')); // ONE-TIME ADMIN SETUP
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 

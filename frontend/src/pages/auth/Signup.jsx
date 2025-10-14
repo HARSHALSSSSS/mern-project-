@@ -144,6 +144,7 @@ const Signup = () => {
               >
                 <option value="tenant">Rent a property (Tenant)</option>
                 <option value="landlord">List my property (Landlord)</option>
+                <option value="admin">Manage the platform (Admin)</option>
               </select>
             </div>
 

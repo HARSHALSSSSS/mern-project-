@@ -7,29 +7,31 @@ export default {
   theme: {
     extend: {
       colors: {
+          // Consza Theme - Primary is now Orange!
           primary: {
-            50: '#f5f7fa',
-            100: '#e4e9f2',
-            200: '#c5cee0',
-            300: '#8f9bb3',
-            400: '#2e3a59',
-            500: '#222b45',
-            600: '#1a2138',
-            700: '#151a30',
-            800: '#101426',
-            900: '#0a0f19',
-          },
-          accent: {
             50: '#fff7ed',
             100: '#ffedd5',
             200: '#fed7aa',
             300: '#fdba74',
-            400: '#fb923c',
-            500: '#f97316',
-            600: '#ea580c',
-            700: '#c2410c',
-            800: '#9a3412',
-            900: '#7c2d12',
+            400: '#ff8533',
+            500: '#FF6600', // Main Consza Orange
+            600: '#e65c00',
+            700: '#cc5200',
+            800: '#b34700',
+            900: '#993d00',
+          },
+          // Consza Theme - Accent is now Dark Navy/Blue
+          accent: {
+            50: '#f5f7fa',
+            100: '#e4e9f2',
+            200: '#c5cee0',
+            300: '#8f9bb3',
+            400: '#2e3a59', // Mid Navy
+            500: '#1a2238', // Dark Navy (Consza Main)
+            600: '#151b2e',
+            700: '#101424',
+            800: '#0c0e1a',
+            900: '#070810',
           },
           success: {
             100: '#d1fae5',

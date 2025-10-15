@@ -14,17 +14,17 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Top Bar */}
-      <div className="bg-primary-600 text-white py-2.5 hidden md:block">
+      {/* Top Bar - Consza Style: Dark Navy Background */}
+      <div className="bg-accent-500 text-white py-3 hidden md:block">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center text-sm">
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <FaPhone className="text-accent-400" />
+              <div className="flex items-center gap-2 hover:text-primary-500 transition-colors cursor-pointer">
+                <FaPhone className="text-primary-500" />
                 <span>+1 (555) 123-4567</span>
               </div>
-              <div className="flex items-center gap-2">
-                <FaEnvelope className="text-accent-400" />
+              <div className="flex items-center gap-2 hover:text-primary-500 transition-colors cursor-pointer">
+                <FaEnvelope className="text-primary-500" />
                 <span>support@realestate.com</span>
               </div>
             </div>
@@ -35,18 +35,18 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Main Navbar */}
-      <nav className="bg-white shadow-card sticky top-0 z-50">
+      {/* Main Navbar - Consza Style: Clean White */}
+      <nav className="bg-white shadow-md sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 sm:h-20">
+          <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
-              <div className="bg-gradient-to-br from-primary-500 to-primary-700 p-2 sm:p-2.5 rounded-lg sm:rounded-xl shadow-btn">
-                <FaBuilding className="text-white text-xl sm:text-2xl" />
+            <Link to="/" className="flex items-center space-x-3">
+              <div className="bg-primary-500 p-3 rounded-lg">
+                <FaBuilding className="text-white text-2xl" />
               </div>
               <div>
-                <span className="text-lg sm:text-2xl font-bold text-primary-700">RealEstate</span>
-                <p className="text-xs text-neutral-500 font-medium hidden sm:block">Property Management</p>
+                <span className="text-2xl font-bold text-accent-500">Consza</span>
+                <p className="text-xs text-neutral-600 font-medium hidden sm:block">Real Estate Solutions</p>
               </div>
             </Link>
             
@@ -54,36 +54,40 @@ const Navbar = () => {
             <div className="hidden lg:flex items-center space-x-8">
               <Link 
                 to="/" 
-                className="text-primary-600 hover:text-accent-500 font-semibold transition-colors duration-200 flex items-center gap-2"
+                className="text-accent-500 hover:text-primary-500 font-semibold text-sm uppercase tracking-wide transition-colors duration-300 relative group"
               >
-                <FaHome className="text-sm" /> Home
+                Home
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-500 group-hover:w-full transition-all duration-300"></span>
               </Link>
               <Link 
                 to="/properties" 
-                className="text-primary-600 hover:text-accent-500 font-semibold transition-colors duration-200 flex items-center gap-2"
+                className="text-accent-500 hover:text-primary-500 font-semibold text-sm uppercase tracking-wide transition-colors duration-300 relative group"
               >
-                <FaBuilding className="text-sm" /> Properties
+                Properties
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-500 group-hover:w-full transition-all duration-300"></span>
               </Link>
               <Link 
                 to="/about" 
-                className="text-primary-600 hover:text-accent-500 font-semibold transition-colors duration-200 flex items-center gap-2"
+                className="text-accent-500 hover:text-primary-500 font-semibold text-sm uppercase tracking-wide transition-colors duration-300 relative group"
               >
-                <FaInfoCircle className="text-sm" /> About
+                About
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-500 group-hover:w-full transition-all duration-300"></span>
               </Link>
               <Link 
                 to="/contact" 
-                className="text-primary-600 hover:text-accent-500 font-semibold transition-colors duration-200 flex items-center gap-2"
+                className="text-accent-500 hover:text-primary-500 font-semibold text-sm uppercase tracking-wide transition-colors duration-300 relative group"
               >
-                <FaEnvelope className="text-sm" /> Contact
+                Contact
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-500 group-hover:w-full transition-all duration-300"></span>
               </Link>
             </div>
 
-            {/* Auth Buttons */}
+            {/* Auth Buttons - Consza Style */}
             <div className="hidden lg:flex items-center space-x-4">
               {user ? (
                 <Link 
                   to={getDashboardLink()} 
-                  className="bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white px-6 py-2.5 rounded-xl font-semibold shadow-btn transition duration-300 flex items-center gap-2"
+                  className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-md font-semibold uppercase text-sm tracking-wide transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl flex items-center gap-2"
                 >
                   <FaUser /> Dashboard
                 </Link>
@@ -91,13 +95,13 @@ const Navbar = () => {
                 <>
                   <Link 
                     to="/login" 
-                    className="text-primary-600 hover:text-accent-500 font-semibold transition-colors duration-200 flex items-center gap-2"
+                    className="text-accent-500 hover:text-primary-500 font-semibold uppercase text-sm tracking-wide transition-colors duration-300 flex items-center gap-2"
                   >
                     <FaSignInAlt /> Login
                   </Link>
                   <Link 
                     to="/signup" 
-                    className="bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white px-6 py-2.5 rounded-xl font-semibold shadow-btn transition duration-300"
+                    className="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-md font-semibold uppercase text-sm tracking-wide transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
                   >
                     Sign Up
                   </Link>
@@ -108,7 +112,7 @@ const Navbar = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden text-primary-600 hover:text-accent-500 p-2"
+              className="lg:hidden text-accent-500 hover:text-primary-500 p-2"
             >
               {mobileMenuOpen ? <FaTimes className="text-2xl" /> : <FaBars className="text-2xl" />}
             </button>
@@ -123,28 +127,28 @@ const Navbar = () => {
                 <Link 
                   to="/" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-primary-600 hover:text-accent-500 font-semibold py-2 flex items-center gap-2"
+                  className="text-accent-500 hover:text-primary-500 font-semibold py-2 uppercase text-sm tracking-wide flex items-center gap-2"
                 >
                   <FaHome /> Home
                 </Link>
                 <Link 
                   to="/properties" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-primary-600 hover:text-accent-500 font-semibold py-2 flex items-center gap-2"
+                  className="text-accent-500 hover:text-primary-500 font-semibold py-2 uppercase text-sm tracking-wide flex items-center gap-2"
                 >
                   <FaBuilding /> Properties
                 </Link>
                 <Link 
                   to="/about" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-primary-600 hover:text-accent-500 font-semibold py-2 flex items-center gap-2"
+                  className="text-accent-500 hover:text-primary-500 font-semibold py-2 uppercase text-sm tracking-wide flex items-center gap-2"
                 >
                   <FaInfoCircle /> About
                 </Link>
                 <Link 
                   to="/contact" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-primary-600 hover:text-accent-500 font-semibold py-2 flex items-center gap-2"
+                  className="text-accent-500 hover:text-primary-500 font-semibold py-2 uppercase text-sm tracking-wide flex items-center gap-2"
                 >
                   <FaEnvelope /> Contact
                 </Link>
@@ -154,7 +158,7 @@ const Navbar = () => {
                     <Link 
                       to={getDashboardLink()} 
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block w-full text-center bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white px-6 py-3 rounded-xl font-semibold shadow-btn"
+                      className="block w-full text-center bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-md font-semibold uppercase text-sm tracking-wide"
                     >
                       <FaUser className="inline mr-2" /> Dashboard
                     </Link>
@@ -163,14 +167,14 @@ const Navbar = () => {
                       <Link 
                         to="/login" 
                         onClick={() => setMobileMenuOpen(false)}
-                        className="block text-center text-primary-600 hover:text-accent-500 font-semibold py-2 mb-2"
+                        className="block text-center text-accent-500 hover:text-primary-500 font-semibold py-2 mb-2 uppercase text-sm tracking-wide"
                       >
                         <FaSignInAlt className="inline mr-2" /> Login
                       </Link>
                       <Link 
                         to="/signup" 
                         onClick={() => setMobileMenuOpen(false)}
-                        className="block text-center bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white px-6 py-3 rounded-xl font-semibold shadow-btn"
+                        className="block text-center bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-md font-semibold uppercase text-sm tracking-wide"
                       >
                         Sign Up
                       </Link>

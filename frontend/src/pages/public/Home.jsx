@@ -23,205 +23,160 @@ const Home = () => {
   };
 
   return (
-    <div className="home-page">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white py-16 sm:py-24 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-black opacity-30"></div>
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-32 sm:w-64 h-32 sm:h-64 bg-accent-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-          <div className="absolute bottom-0 right-0 w-48 sm:w-96 h-48 sm:h-96 bg-accent-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-1000"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-4 sm:mb-6 inline-block">
-              <span className="bg-accent-500 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide shadow-btn">
-                FIND YOUR DREAM HOME
+    <div className="home-page bg-white">
+      {/* Hero Section - Consza Style: Full-width background with dark overlay */}
+      <section className="relative bg-cover bg-center h-[600px] lg:h-[700px]" style={{
+        backgroundImage: `linear-gradient(rgba(26, 34, 56, 0.85), rgba(26, 34, 56, 0.85)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`
+      }}>
+        <div className="container mx-auto px-4 h-full flex items-center">
+          <div className="max-w-3xl text-white">
+            <div className="mb-6">
+              <span className="bg-primary-500 text-white px-5 py-2 rounded-md text-xs font-bold uppercase tracking-wider inline-block">
+                Find Your Dream Home
               </span>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight px-4">
-              We Will Build Your <br className="hidden sm:block" />
-              <span className="text-accent-400">Dream Property</span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+              We Will Build Your <br />
+              <span className="text-primary-500">Dream Property</span>
             </h1>
-            <p className="text-base sm:text-lg lg:text-xl mb-8 sm:mb-12 text-neutral-200 max-w-2xl mx-auto px-4">
-              Discover the perfect property for rent. We provide high-quality rental solutions for tenants and comprehensive property management for landlords.
+            <p className="text-lg md:text-xl mb-8 text-gray-200 leading-relaxed">
+              High-quality construction solutions for residentials & industries!<br />
+              You can dream, create, design and build the most wonderful place in the world.
             </p>
-
-            {/* Search Box */}
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-card p-4 sm:p-6 max-w-4xl mx-auto">
-              <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                <div className="relative sm:col-span-2 lg:col-span-1">
-                  <FaMapMarkerAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
-                  <input
-                    type="text"
-                    placeholder="Location"
-                    value={searchQuery.location}
-                    onChange={(e) => setSearchQuery({ ...searchQuery, location: e.target.value })}
-                    className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-500 text-primary-700"
-                  />
-                </div>
-                
-                <select
-                  value={searchQuery.type}
-                  onChange={(e) => setSearchQuery({ ...searchQuery, type: e.target.value })}
-                  className="px-4 py-3 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-500 text-primary-700"
-                >
-                  <option value="">Property Type</option>
-                  <option value="apartment">Apartment</option>
-                  <option value="house">House</option>
-                  <option value="villa">Villa</option>
-                  <option value="studio">Studio</option>
-                  <option value="condo">Condo</option>
-                </select>
-
-                <select
-                  value={searchQuery.priceRange}
-                  onChange={(e) => setSearchQuery({ ...searchQuery, priceRange: e.target.value })}
-                  className="px-4 py-3 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-500 text-primary-700"
-                >
-                  <option value="">Price Range</option>
-                  <option value="0-1000">$0 - $1,000</option>
-                  <option value="1000-2000">$1,000 - $2,000</option>
-                  <option value="2000-3000">$2,000 - $3,000</option>
-                  <option value="3000+">$3,000+</option>
-                </select>
-
-                <button
-                  type="submit"
-                  className="bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white px-6 sm:px-8 py-3 rounded-xl font-semibold shadow-btn transition duration-300 flex items-center justify-center gap-2 sm:col-span-2 lg:col-span-1"
-                >
-                  <FaSearch /> <span>Search</span>
-                </button>
-              </form>
+            
+            {/* CTA Buttons - Consza Style */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                to="/properties"
+                className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-md font-semibold uppercase text-sm tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg inline-block text-center"
+              >
+                Browse Properties
+              </Link>
+              <Link
+                to="/about"
+                className="bg-transparent border-2 border-white hover:bg-white hover:text-accent-500 text-white px-8 py-4 rounded-md font-semibold uppercase text-sm tracking-wide transition-all duration-300 inline-block text-center"
+              >
+                Learn More
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-12 sm:py-16 bg-neutral-100">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+      {/* Stats Section - Consza Style: Dark Navy Background */}
+      <section className="py-16 lg:py-20 bg-accent-500">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-primary-600 text-white rounded-full mb-3 sm:mb-4">
-                <FaBuilding className="text-xl sm:text-3xl" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-500 bg-opacity-20 text-primary-500 rounded-full mb-4">
+                <FaBuilding className="text-3xl" />
               </div>
-              <h3 className="text-2xl sm:text-4xl font-bold text-primary-800 mb-1 sm:mb-2">1,345+</h3>
-              <p className="text-sm sm:text-base text-neutral-600">Properties Listed</p>
+              <h3 className="text-4xl lg:text-5xl font-bold text-white mb-2">1,345+</h3>
+              <p className="text-gray-300 text-sm uppercase tracking-wide">Properties Listed</p>
             </div>
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-success-500 text-white rounded-full mb-3 sm:mb-4">
-                <FaUsers className="text-xl sm:text-3xl" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-500 bg-opacity-20 text-primary-500 rounded-full mb-4">
+                <FaUsers className="text-3xl" />
               </div>
-              <h3 className="text-2xl sm:text-4xl font-bold text-primary-800 mb-1 sm:mb-2">5,240+</h3>
-              <p className="text-sm sm:text-base text-neutral-600">Happy Tenants</p>
+              <h3 className="text-4xl lg:text-5xl font-bold text-white mb-2">5,240+</h3>
+              <p className="text-gray-300 text-sm uppercase tracking-wide">Happy Clients</p>
             </div>
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-warning-500 text-white rounded-full mb-3 sm:mb-4">
-                <FaHome className="text-xl sm:text-3xl" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-500 bg-opacity-20 text-primary-500 rounded-full mb-4">
+                <FaHome className="text-3xl" />
               </div>
-              <h3 className="text-2xl sm:text-4xl font-bold text-primary-800 mb-1 sm:mb-2">890+</h3>
-              <p className="text-sm sm:text-base text-neutral-600">Trusted Landlords</p>
+              <h3 className="text-4xl lg:text-5xl font-bold text-white mb-2">890+</h3>
+              <p className="text-gray-300 text-sm uppercase tracking-wide">Projects Complete</p>
             </div>
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-accent-600 text-white rounded-full mb-3 sm:mb-4">
-                <FaChartLine className="text-xl sm:text-3xl" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-500 bg-opacity-20 text-primary-500 rounded-full mb-4">
+                <FaChartLine className="text-3xl" />
               </div>
-              <h3 className="text-2xl sm:text-4xl font-bold text-primary-800 mb-1 sm:mb-2">98%</h3>
-              <p className="text-sm sm:text-base text-neutral-600">Success Rate</p>
+              <h3 className="text-4xl lg:text-5xl font-bold text-white mb-2">25+</h3>
+              <p className="text-gray-300 text-sm uppercase tracking-wide">Years Experience</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="py-12 sm:py-16 lg:py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+      {/* About Section - Consza Style */}
+      <section className="py-20 lg:py-28 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="text-accent-600 font-semibold text-sm uppercase tracking-wide">About Us</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-primary-800 mt-4 mb-4 sm:mb-6">
+              <span className="text-primary-500 font-bold text-sm uppercase tracking-wider">About Us</span>
+              <h2 className="text-3xl lg:text-5xl font-bold text-accent-500 mt-4 mb-6 leading-tight">
                 We've Been Building Our Experience
               </h2>
-              <p className="text-neutral-600 mb-4 sm:mb-6 leading-relaxed">
-                We provide high-quality property rental and management solutions for both residential properties. Our platform connects tenants with their dream homes and empowers landlords with efficient management tools.
+              <p className="text-gray-600 mb-6 leading-relaxed text-lg">
+                We've been building our experience high quality construction solutions for residentials & industries!
               </p>
-              <p className="text-neutral-600 mb-6 sm:mb-8 leading-relaxed">
-                With years of experience in the real estate industry, we understand what it takes to create successful rental relationships. Our comprehensive platform handles everything from property listings to payment processing and maintenance requests.
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                You can dream, create, design and build the most wonderful place in the world. But it requires people. Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                 <div className="flex items-start gap-3">
-                  <FaCheckCircle className="text-success-500 text-xl mt-1 flex-shrink-0" />
+                  <div className="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <FaCheckCircle className="text-white text-xl" />
+                  </div>
                   <div>
-                    <h4 className="font-semibold text-primary-800 mb-1">Verified Properties</h4>
-                    <p className="text-neutral-600 text-sm">All properties are verified and approved</p>
+                    <h4 className="font-bold text-accent-500 mb-1">Construction Services</h4>
+                    <p className="text-gray-600 text-sm">Lorem ipsum dolor sit piscing sed nonmy</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <FaCheckCircle className="text-green-500 text-xl mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-1">Secure Payments</h4>
-                    <p className="text-gray-600 text-sm">Safe and encrypted payment processing</p>
+                  <div className="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <FaCheckCircle className="text-white text-xl" />
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <FaCheckCircle className="text-green-500 text-xl mt-1 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-gray-800 mb-1">24/7 Support</h4>
-                    <p className="text-gray-600 text-sm">Round the clock customer assistance</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <FaCheckCircle className="text-green-500 text-xl mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-1">Easy Management</h4>
-                    <p className="text-gray-600 text-sm">Comprehensive property management tools</p>
+                    <h4 className="font-bold text-accent-500 mb-1">Unique Technology</h4>
+                    <p className="text-gray-600 text-sm">Lorem ipsum dolor sit piscing sed nonmy</p>
                   </div>
                 </div>
               </div>
 
               <Link
                 to="/about"
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300"
+                className="inline-block bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-md font-semibold uppercase text-sm tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg"
               >
-                More About Us
+                More About
               </Link>
             </div>
 
             <div className="relative">
               <img
-                src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1073&q=80"
+                src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80"
                 alt="Modern Building"
-                className="rounded-2xl shadow-2xl"
+                className="rounded-lg shadow-2xl w-full"
               />
-              <div className="absolute -bottom-8 -left-8 bg-blue-600 text-white p-8 rounded-xl shadow-xl">
+              <div className="absolute -bottom-10 -left-10 bg-primary-500 text-white p-8 rounded-lg shadow-xl hidden lg:block">
                 <p className="text-5xl font-bold mb-2">25+</p>
-                <p className="text-sm">Years of Experience</p>
+                <p className="text-sm uppercase tracking-wide">Years of Services</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Properties */}
-      <section className="py-20 bg-gray-50">
+      {/* Featured Properties - Consza Style */}
+      <section className="py-20 lg:py-28 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="text-blue-600 font-semibold text-sm uppercase tracking-wide">Featured Properties</span>
-            <h2 className="text-4xl font-bold text-gray-800 mt-4 mb-4">
-              Explore Our Best Properties
+          <div className="text-center mb-16">
+            <span className="text-primary-500 font-bold text-sm uppercase tracking-wider">Explore Recent Work</span>
+            <h2 className="text-3xl lg:text-5xl font-bold text-accent-500 mt-4 mb-4">
+              Some of Our Finished Projects
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Discover handpicked properties that offer the best value, location, and amenities for your lifestyle.
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              That will amaze you. Quality and reliability services to provide a solution to your project.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {loading ? (
               Array.from({ length: 6 }).map((_, idx) => (
-                <div key={idx} className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse">
-                  <div className="h-64 bg-gray-300"></div>
+                <div key={idx} className="bg-white rounded-lg shadow-lg overflow-hidden animate-pulse">
+                  <div className="h-72 bg-gray-300"></div>
                   <div className="p-6">
                     <div className="h-4 bg-gray-300 rounded mb-4"></div>
                     <div className="h-6 bg-gray-300 rounded mb-4"></div>
@@ -231,55 +186,64 @@ const Home = () => {
               ))
             ) : featuredProperties.length > 0 ? (
               featuredProperties.map((property) => (
-                <Link
+                <div
                   key={property._id}
-                  to={`/properties/${property._id}`}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                  className="bg-white rounded-lg shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                 >
-                  <div className="relative h-64 overflow-hidden">
+                  <div className="relative h-72 overflow-hidden">
                     <img
                       src={property.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'}
                       alt={property.title}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    <div className="absolute top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full font-semibold">
-                      ${property.rent}/mo
+                    {/* Overlay on hover */}
+                    <div className="absolute inset-0 bg-accent-500 opacity-0 group-hover:opacity-90 transition-opacity duration-300 flex items-center justify-center">
+                      <Link
+                        to={`/properties/${property._id}`}
+                        className="text-white border-2 border-white px-6 py-3 rounded-md font-semibold uppercase text-sm hover:bg-white hover:text-accent-500 transition-all duration-300"
+                      >
+                        View Details
+                      </Link>
                     </div>
-                    <div className="absolute top-4 left-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      {property.status}
+                    <div className="absolute top-4 left-4 bg-primary-500 text-white px-3 py-1 rounded-md text-sm font-bold uppercase">
+                      {property.propertyType || 'Property'}
                     </div>
                   </div>
                   
                   <div className="p-6">
-                    <div className="flex items-center gap-2 text-gray-500 text-sm mb-3">
-                      <FaMapMarkerAlt className="text-blue-600" />
-                      <span>{property.address?.city}, {property.address?.state}</span>
-                    </div>
-                    
-                    <h3 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2">
+                    <h3 className="text-xl font-bold text-accent-500 mb-3 line-clamp-1">
                       {property.title}
                     </h3>
                     
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed">
                       {property.description}
                     </p>
 
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                      <div className="flex items-center gap-1 text-gray-700">
-                        <FaBed className="text-blue-600" />
-                        <span className="text-sm font-semibold">{property.bedrooms}</span>
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <FaBed className="text-primary-500" />
+                        <span className="text-sm font-semibold">{property.bedrooms} Beds</span>
                       </div>
-                      <div className="flex items-center gap-1 text-gray-700">
-                        <FaBath className="text-blue-600" />
-                        <span className="text-sm font-semibold">{property.bathrooms}</span>
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <FaBath className="text-primary-500" />
+                        <span className="text-sm font-semibold">{property.bathrooms} Baths</span>
                       </div>
-                      <div className="flex items-center gap-1 text-gray-700">
-                        <FaRulerCombined className="text-blue-600" />
+                      <div className="flex items-center gap-2 text-gray-700">
+                        <FaRulerCombined className="text-primary-500" />
                         <span className="text-sm font-semibold">{property.area} sqft</span>
                       </div>
                     </div>
+                    
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <Link
+                        to={`/properties/${property._id}`}
+                        className="text-primary-500 font-semibold text-sm uppercase tracking-wide hover:text-accent-500 transition-colors flex items-center gap-2"
+                      >
+                        Read More <span>→</span>
+                      </Link>
+                    </div>
                   </div>
-                </Link>
+                </div>
               ))
             ) : (
               <div className="col-span-3 text-center py-12">
@@ -291,7 +255,7 @@ const Home = () => {
           <div className="text-center mt-12">
             <Link
               to="/properties"
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition duration-300"
+              className="inline-block bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-md font-semibold uppercase text-sm tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg"
             >
               View All Properties
             </Link>
@@ -299,70 +263,93 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-20">
+      {/* Services Section - Consza Style */}
+      <section className="py-20 lg:py-28 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="text-blue-600 font-semibold text-sm uppercase tracking-wide">Our Services</span>
-            <h2 className="text-4xl font-bold text-gray-800 mt-4 mb-4">
-              What We Offer
+          <div className="text-center mb-16">
+            <span className="text-primary-500 font-bold text-sm uppercase tracking-wider">What We Do!</span>
+            <h2 className="text-3xl lg:text-5xl font-bold text-accent-500 mt-4 mb-4">
+              We Provide All Of Construction <br className="hidden lg:block" />
+              And Building Exclusive Service
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
               Comprehensive property management and rental solutions tailored to your needs.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
+            <div className="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 group border-b-4 border-primary-500">
+              <div className="w-20 h-20 bg-primary-500 text-white rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <FaHome className="text-3xl" />
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Property Rentals</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Browse through thousands of verified properties and find your perfect home. Easy application process and transparent pricing.
+              <h3 className="text-xl font-bold text-accent-500 mb-4">Architecture Design</h3>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Lorem ipsum dolor sit and amet, adipisicing elit, sed do eiusmod tempor. Happy with our services.
               </p>
+              <Link
+                to="/properties"
+                className="text-primary-500 font-semibold uppercase text-sm tracking-wide hover:text-accent-500 transition-colors flex items-center gap-2"
+              >
+                View All <span>→</span>
+              </Link>
             </div>
 
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-              <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
+            <div className="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 group border-b-4 border-primary-500">
+              <div className="w-20 h-20 bg-primary-500 text-white rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <FaBuilding className="text-3xl" />
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Property Management</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="text-xl font-bold text-accent-500 mb-4">Build Construction</h3>
+              <p className="text-gray-600 leading-relaxed mb-6">
                 Complete property management solutions for landlords. Handle tenants, payments, and maintenance all in one place.
               </p>
+              <Link
+                to="/properties"
+                className="text-primary-500 font-semibold uppercase text-sm tracking-wide hover:text-accent-500 transition-colors flex items-center gap-2"
+              >
+                View All <span>→</span>
+              </Link>
             </div>
 
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-              <div className="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-6">
+            <div className="bg-white p-8 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 group border-b-4 border-primary-500">
+              <div className="w-20 h-20 bg-primary-500 text-white rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 <FaChartLine className="text-3xl" />
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Analytics & Reporting</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="text-xl font-bold text-accent-500 mb-4">Building Renovation</h3>
+              <p className="text-gray-600 leading-relaxed mb-6">
                 Advanced analytics and reporting tools to track your property performance, revenue, and occupancy rates.
               </p>
+              <Link
+                to="/properties"
+                className="text-primary-500 font-semibold uppercase text-sm tracking-wide hover:text-accent-500 transition-colors flex items-center gap-2"
+              >
+                View All <span>→</span>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Find Your Dream Property?</h2>
-          <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
+      {/* CTA Section - Consza Style */}
+      <section className="py-20 lg:py-28 bg-accent-500 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-primary-500 rounded-full filter blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary-500 rounded-full filter blur-3xl"></div>
+        </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-3xl lg:text-5xl font-bold mb-6">Ready to Find Your Dream Property?</h2>
+          <p className="text-xl mb-10 text-gray-200 max-w-2xl mx-auto leading-relaxed">
             Join thousands of happy tenants and landlords who trust our platform for their rental needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/signup"
-              className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold transition duration-300"
+              className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-md font-semibold uppercase text-sm tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg inline-block"
             >
               Get Started as Tenant
             </Link>
             <Link
               to="/signup"
-              className="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-lg font-semibold transition duration-300"
+              className="bg-transparent border-2 border-white hover:bg-white hover:text-accent-500 text-white px-8 py-4 rounded-md font-semibold uppercase text-sm tracking-wide transition-all duration-300 inline-block"
             >
               List Your Property
             </Link>

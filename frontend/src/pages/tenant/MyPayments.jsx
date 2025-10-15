@@ -100,40 +100,63 @@ const MyPayments = () => {
   const totalPending = payments.filter(p => p.status === 'pending' || p.status === 'overdue').reduce((sum, p) => sum + p.amount, 0);
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">My Payments</h1>
-        <p className="text-gray-600">Track and manage your rental payments</p>
+    <div className="space-y-6 bg-gray-50 min-h-screen p-6">
+      {/* Header - Consza Style */}
+      <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-primary-500">
+        <h1 className="text-3xl font-bold text-accent-500 mb-2">My Payments</h1>
+        <p className="text-gray-600 text-lg">Track and manage your rental payments</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
+      {/* Stats Grid - Consza Theme */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-green-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Total Paid</p><p className="text-3xl font-bold text-green-600">${totalPaid.toLocaleString()}</p></div>
-            <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center"><FaCheckCircle className="text-2xl text-green-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Total Paid</p>
+              <p className="text-3xl font-bold text-accent-500">${totalPaid.toLocaleString()}</p>
+            </div>
+            <div className="w-14 h-14 bg-green-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaCheckCircle className="text-2xl text-green-600" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-yellow-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Pending</p><p className="text-3xl font-bold text-yellow-600">${totalPending.toLocaleString()}</p></div>
-            <div className="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center"><FaClock className="text-2xl text-yellow-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Pending</p>
+              <p className="text-3xl font-bold text-accent-500">${totalPending.toLocaleString()}</p>
+            </div>
+            <div className="w-14 h-14 bg-yellow-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaClock className="text-2xl text-yellow-600" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-red-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Overdue</p><p className="text-3xl font-bold text-red-600">{payments.filter(p => p.status === 'overdue').length}</p></div>
-            <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center"><FaTimesCircle className="text-2xl text-red-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Overdue</p>
+              <p className="text-3xl font-bold text-accent-500">{payments.filter(p => p.status === 'overdue').length}</p>
+            </div>
+            <div className="w-14 h-14 bg-red-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaTimesCircle className="text-2xl text-red-600" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-primary-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Total Payments</p><p className="text-3xl font-bold text-blue-600">{payments.length}</p></div>
-            <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center"><FaDollarSign className="text-2xl text-blue-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Total Payments</p>
+              <p className="text-3xl font-bold text-accent-500">{payments.length}</p>
+            </div>
+            <div className="w-14 h-14 bg-primary-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaDollarSign className="text-2xl text-primary-600" />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6">
+      {/* Payments Table */}
+      <div className="bg-white rounded-lg shadow-lg p-6">
         <DataTable
           columns={columns}
           data={payments}
@@ -142,26 +165,27 @@ const MyPayments = () => {
           customActions={(p) => (
             <>
               {p.status === 'paid' && <button onClick={() => downloadReceipt(p._id)} className="text-blue-600 hover:text-blue-800 p-2" title="Download"><FaDownload /></button>}
-              {(p.status === 'pending' || p.status === 'overdue') && <button onClick={() => { setSelectedPayment(p); setShowPaymentModal(true); }} className="text-green-600 hover:text-green-800 p-2" title="Pay"><FaCreditCard /></button>}
+              {(p.status === 'pending' || p.status === 'overdue') && <button onClick={() => { setSelectedPayment(p); setShowPaymentModal(true); }} className="text-primary-600 hover:text-primary-800 p-2" title="Pay"><FaCreditCard /></button>}
             </>
           )}
         />
       </div>
 
+      {/* Payment Modal */}
       <Modal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} title="Make Payment" size="md">
         {selectedPayment && (
           <form onSubmit={processPayment}>
             <div className="space-y-6">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-lg mb-2">Payment Details</h3>
+              <div className="bg-primary-50 p-4 rounded-lg border-l-4 border-primary-500">
+                <h3 className="font-semibold text-lg mb-2 text-accent-500">Payment Details</h3>
                 <div className="space-y-2">
-                  <div className="flex justify-between"><span className="text-gray-600">Amount:</span><span className="font-bold text-xl">${selectedPayment.amount?.toLocaleString()}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-600">Due Date:</span><span>{new Date(selectedPayment.dueDate).toLocaleDateString()}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-600">Amount:</span><span className="font-bold text-xl text-primary-500">${selectedPayment.amount?.toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-600">Due Date:</span><span className="font-semibold">{new Date(selectedPayment.dueDate).toLocaleDateString()}</span></div>
                 </div>
               </div>
               <div className="flex gap-3 pt-4 border-t">
-                <button type="button" onClick={() => setShowPaymentModal(false)} className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
-                <button type="submit" disabled={paymentProcessing} className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">{paymentProcessing ? 'Processing...' : 'Pay Now'}</button>
+                <button type="button" onClick={() => setShowPaymentModal(false)} className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition-all duration-300">Cancel</button>
+                <button type="submit" disabled={paymentProcessing} className="flex-1 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-semibold uppercase text-sm tracking-wide transition-all duration-300 transform hover:-translate-y-1 shadow-lg disabled:opacity-50 disabled:hover:translate-y-0">{paymentProcessing ? 'Processing...' : 'Pay Now'}</button>
               </div>
             </div>
           </form>

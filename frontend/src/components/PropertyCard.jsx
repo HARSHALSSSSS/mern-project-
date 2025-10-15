@@ -7,6 +7,37 @@ import { useState } from 'react';
 const PropertyCard = ({ property, showActions = false, onApply }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
+  // Get API URL from environment
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const BASE_URL = API_URL.replace('/api', ''); // Remove /api to get base URL
+
+  // Helper function to get full image URL
+  const getImageUrl = (image) => {
+    if (!image) return 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
+    
+    // If image is a string
+    if (typeof image === 'string') {
+      // If it's already a full URL, return as is
+      if (image.startsWith('http://') || image.startsWith('https://')) {
+        return image;
+      }
+      // If it's a relative path, prepend base URL
+      return `${BASE_URL}${image}`;
+    }
+    
+    // If image is an object with url property
+    if (image.url) {
+      // If it's already a full URL, return as is
+      if (image.url.startsWith('http://') || image.url.startsWith('https://')) {
+        return image.url;
+      }
+      // If it's a relative path, prepend base URL
+      return `${BASE_URL}${image.url}`;
+    }
+    
+    return 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
+  };
+
   const getStatusColor = (status) => {
     const colors = {
       available: 'bg-success-500',
@@ -22,12 +53,7 @@ const PropertyCard = ({ property, showActions = false, onApply }) => {
       {/* Image */}
       <Link to={`/properties/${property._id}`} className="relative block h-48 sm:h-56 md:h-64 overflow-hidden">
         <img
-          src={
-            (typeof property.images?.[0] === 'string' 
-              ? property.images[0] 
-              : property.images?.[0]?.url) || 
-            'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
-          }
+          src={getImageUrl(property.images?.[0])}
           alt={property.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />

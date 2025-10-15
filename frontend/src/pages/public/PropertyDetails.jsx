@@ -16,6 +16,37 @@ const PropertyDetails = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [applicationData, setApplicationData] = useState({ moveInDate: '', message: '' });
 
+  // Get API URL from environment
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const BASE_URL = API_URL.replace('/api', ''); // Remove /api to get base URL
+
+  // Helper function to get full image URL
+  const getImageUrl = (image) => {
+    if (!image) return null;
+    
+    // If image is a string
+    if (typeof image === 'string') {
+      // If it's already a full URL, return as is
+      if (image.startsWith('http://') || image.startsWith('https://')) {
+        return image;
+      }
+      // If it's a relative path, prepend base URL
+      return `${BASE_URL}${image}`;
+    }
+    
+    // If image is an object with url property
+    if (image.url) {
+      // If it's already a full URL, return as is
+      if (image.url.startsWith('http://') || image.url.startsWith('https://')) {
+        return image.url;
+      }
+      // If it's a relative path, prepend base URL
+      return `${BASE_URL}${image.url}`;
+    }
+    
+    return null;
+  };
+
   useEffect(() => {
     dispatch(getPropertyById(id));
   }, [dispatch, id]);
@@ -51,7 +82,7 @@ const PropertyDetails = () => {
               <div className="relative">
                 {property.images && property.images.length > 0 ? (
                   <>
-                    <img src={property.images[currentImage]?.url} alt={property.title} className="w-full h-96 object-cover" />
+                    <img src={getImageUrl(property.images[currentImage])} alt={property.title} className="w-full h-96 object-cover" />
                     <button onClick={prevImage} className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white">
                       <FaChevronLeft className="text-gray-800" />
                     </button>
@@ -72,7 +103,7 @@ const PropertyDetails = () => {
 
               <div className="grid grid-cols-4 gap-2 p-4">
                 {property.images?.slice(0, 4).map((img, i) => (
-                  <img key={i} src={img.url} alt={`Thumbnail ${i+1}`} onClick={() => setCurrentImage(i)} className={`w-full h-20 object-cover rounded-lg cursor-pointer ${currentImage === i ? 'ring-4 ring-blue-600' : 'opacity-70 hover:opacity-100'}`} />
+                  <img key={i} src={getImageUrl(img)} alt={`Thumbnail ${i+1}`} onClick={() => setCurrentImage(i)} className={`w-full h-20 object-cover rounded-lg cursor-pointer ${currentImage === i ? 'ring-4 ring-blue-600' : 'opacity-70 hover:opacity-100'}`} />
                 ))}
               </div>
             </div>

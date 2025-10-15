@@ -114,6 +114,9 @@ exports.createProperty = async (req, res) => {
     if (typeof propertyData.address === 'string') {
       propertyData.address = JSON.parse(propertyData.address);
     }
+    if (typeof propertyData.area === 'string') {
+      propertyData.area = JSON.parse(propertyData.area);
+    }
     if (typeof propertyData.amenities === 'string') {
       propertyData.amenities = JSON.parse(propertyData.amenities);
     }

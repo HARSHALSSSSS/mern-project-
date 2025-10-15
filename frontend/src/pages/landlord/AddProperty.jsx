@@ -7,10 +7,12 @@ const AddProperty = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    title: '', type: 'apartment', description: '', bedrooms: 1, bathrooms: 1, squareFeet: 0,
-    rent: { amount: 0, currency: 'USD', paymentFrequency: 'monthly' },
+    title: '', type: 'apartment', description: '', bedrooms: 1, bathrooms: 1,
+    area: { value: 0, unit: 'sqft' },
+    rent: { amount: 0, currency: 'USD', period: 'monthly' },
+    deposit: 0,
     address: { street: '', city: '', state: '', zipCode: '', country: 'USA' },
-    amenities: [], utilities: [], petPolicy: 'not-allowed', parkingSpaces: 0,
+    amenities: [],
   });
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,9 +29,10 @@ const AddProperty = () => {
       data.append('description', formData.description);
       data.append('bedrooms', formData.bedrooms);
       data.append('bathrooms', formData.bathrooms);
-      data.append('squareFeet', formData.squareFeet);
-      data.append('petPolicy', formData.petPolicy);
-      data.append('parkingSpaces', formData.parkingSpaces);
+      data.append('deposit', formData.deposit);
+      
+      // Handle area as JSON string
+      data.append('area', JSON.stringify(formData.area));
       
       // Handle rent as JSON string
       data.append('rent', JSON.stringify(formData.rent));
@@ -40,11 +43,6 @@ const AddProperty = () => {
       // Handle amenities array
       if (formData.amenities.length > 0) {
         data.append('amenities', JSON.stringify(formData.amenities));
-      }
-      
-      // Handle utilities array
-      if (formData.utilities && formData.utilities.length > 0) {
-        data.append('utilities', JSON.stringify(formData.utilities));
       }
       
       // Handle images
@@ -59,7 +57,7 @@ const AddProperty = () => {
       navigate('/landlord/properties');
     } catch (error) {
       console.error('Failed to create property:', error);
-      alert(error.response?.data?.message || 'Failed to create property');
+      alert(error.response?.data?.message || error.response?.data?.error || 'Failed to create property');
     } finally {
       setLoading(false);
     }
@@ -108,6 +106,10 @@ const AddProperty = () => {
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Monthly Rent *</label>
                 <input type="number" required value={formData.rent.amount} onChange={(e) => setFormData({...formData, rent: {...formData.rent, amount: parseInt(e.target.value)}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="2000" />
               </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Security Deposit *</label>
+                <input type="number" required value={formData.deposit} onChange={(e) => setFormData({...formData, deposit: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="1000" />
+              </div>
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div>
@@ -119,8 +121,8 @@ const AddProperty = () => {
                 <input type="number" required min="0" value={formData.bathrooms} onChange={(e) => setFormData({...formData, bathrooms: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Sq Ft *</label>
-                <input type="number" required value={formData.squareFeet} onChange={(e) => setFormData({...formData, squareFeet: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Area (Sq Ft) *</label>
+                <input type="number" required value={formData.area.value} onChange={(e) => setFormData({...formData, area: {...formData.area, value: parseInt(e.target.value)}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
               </div>
             </div>
             <div>
@@ -160,21 +162,6 @@ const AddProperty = () => {
                     <span className="text-sm">{a}</span>
                   </label>
                 ))}
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Pet Policy</label>
-                <select value={formData.petPolicy} onChange={(e) => setFormData({...formData, petPolicy: e.target.value})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                  <option value="not-allowed">Not Allowed</option>
-                  <option value="cats-only">Cats Only</option>
-                  <option value="dogs-only">Dogs Only</option>
-                  <option value="allowed">All Pets Allowed</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Parking Spaces</label>
-                <input type="number" min="0" value={formData.parkingSpaces} onChange={(e) => setFormData({...formData, parkingSpaces: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
               </div>
             </div>
           </div>

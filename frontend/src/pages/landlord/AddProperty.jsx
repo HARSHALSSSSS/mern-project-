@@ -79,17 +79,34 @@ const AddProperty = () => {
       // Handle images
       images.forEach(img => data.append('images', img));
       
+      console.log('Submitting property creation...');
       const response = await axios.post('/properties', data, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       
+      console.log('Property created successfully:', response.data);
       alert('Property created successfully!');
-      navigate('/landlord/properties');
+      
+      // Use navigate with replace to avoid back button issues
+      navigate('/landlord/properties', { replace: true });
     } catch (error) {
-      console.error('Failed to create property:', error);
-      alert(error.response?.data?.message || error.response?.data?.error || 'Failed to create property. Please try again.');
+      console.error('Failed to create property - Full error:', error);
+      console.error('Error response:', error.response);
+      console.error('Error message:', error.message);
+      
+      let errorMessage = 'Failed to create property. Please try again.';
+      
+      if (error.response) {
+        // Server responded with error
+        errorMessage = error.response.data?.message || error.response.data?.error || `Server error: ${error.response.status}`;
+      } else if (error.request) {
+        // Request made but no response
+        errorMessage = 'Network error. Please check your connection and try again.';
+      }
+      
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -67,40 +67,63 @@ const TenantApplications = () => {
   ];
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Tenant Applications</h1>
-        <p className="text-gray-600">Review and manage rental applications</p>
+    <div className="space-y-6 bg-gray-50 min-h-screen p-6">
+      {/* Header - Consza Style */}
+      <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-primary-500">
+        <h1 className="text-3xl font-bold text-accent-500 mb-2">Tenant Applications</h1>
+        <p className="text-gray-600 text-lg">Review and manage rental applications</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
+      {/* Stats Grid - Consza Theme */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-primary-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Total</p><p className="text-3xl font-bold">{applications.length}</p></div>
-            <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center"><FaUsers className="text-2xl text-blue-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Total</p>
+              <p className="text-3xl font-bold text-accent-500">{applications.length}</p>
+            </div>
+            <div className="w-14 h-14 bg-primary-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaUsers className="text-2xl text-primary-600" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-yellow-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Pending</p><p className="text-3xl font-bold text-yellow-600">{applications.filter(a => a.status === 'pending').length}</p></div>
-            <div className="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center"><FaClock className="text-2xl text-yellow-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Pending</p>
+              <p className="text-3xl font-bold text-accent-500">{applications.filter(a => a.status === 'pending').length}</p>
+            </div>
+            <div className="w-14 h-14 bg-yellow-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaClock className="text-2xl text-yellow-600" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-green-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Approved</p><p className="text-3xl font-bold text-green-600">{applications.filter(a => a.status === 'approved').length}</p></div>
-            <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center"><FaCheckCircle className="text-2xl text-green-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Approved</p>
+              <p className="text-3xl font-bold text-accent-500">{applications.filter(a => a.status === 'approved').length}</p>
+            </div>
+            <div className="w-14 h-14 bg-green-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaCheckCircle className="text-2xl text-green-600" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-red-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Rejected</p><p className="text-3xl font-bold text-red-600">{applications.filter(a => a.status === 'rejected').length}</p></div>
-            <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center"><FaTimesCircle className="text-2xl text-red-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Rejected</p>
+              <p className="text-3xl font-bold text-accent-500">{applications.filter(a => a.status === 'rejected').length}</p>
+            </div>
+            <div className="w-14 h-14 bg-red-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaTimesCircle className="text-2xl text-red-600" />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6">
+      {/* Applications Table */}
+      <div className="bg-white rounded-lg shadow-lg p-6">
         <DataTable
           columns={columns}
           data={applications}
@@ -108,8 +131,8 @@ const TenantApplications = () => {
           onView={(a) => { setSelectedApp(a); setShowDetailModal(true); }}
           customActions={(a) => a.status === 'pending' && (
             <>
-              <button onClick={() => handleApprove(a._id)} className="text-green-600 hover:text-green-800 p-2 font-semibold">Approve</button>
-              <button onClick={() => handleReject(a._id)} className="text-red-600 hover:text-red-800 p-2 font-semibold">Reject</button>
+              <button onClick={() => handleApprove(a._id)} className="text-green-600 hover:text-green-800 p-2 font-semibold uppercase text-xs tracking-wide transition-all">Approve</button>
+              <button onClick={() => handleReject(a._id)} className="text-red-600 hover:text-red-800 p-2 font-semibold uppercase text-xs tracking-wide transition-all">Reject</button>
             </>
           )}
         />
@@ -119,10 +142,10 @@ const TenantApplications = () => {
         {selectedApp && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div><p className="text-sm text-gray-600">Tenant Name</p><p className="font-semibold">{selectedApp.tenant?.name}</p></div>
-              <div><p className="text-sm text-gray-600">Email</p><p className="font-semibold">{selectedApp.tenant?.email}</p></div>
-              <div><p className="text-sm text-gray-600">Property</p><p className="font-semibold">{selectedApp.property?.title}</p></div>
-              <div><p className="text-sm text-gray-600">Move-in Date</p><p className="font-semibold">{selectedApp.moveInDate ? new Date(selectedApp.moveInDate).toLocaleDateString() : 'N/A'}</p></div>
+              <div><p className="text-sm text-gray-600 uppercase tracking-wide">Tenant Name</p><p className="font-semibold text-accent-500">{selectedApp.tenant?.name}</p></div>
+              <div><p className="text-sm text-gray-600 uppercase tracking-wide">Email</p><p className="font-semibold">{selectedApp.tenant?.email}</p></div>
+              <div><p className="text-sm text-gray-600 uppercase tracking-wide">Property</p><p className="font-semibold text-accent-500">{selectedApp.property?.title}</p></div>
+              <div><p className="text-sm text-gray-600 uppercase tracking-wide">Move-in Date</p><p className="font-semibold">{selectedApp.moveInDate ? new Date(selectedApp.moveInDate).toLocaleDateString() : 'N/A'}</p></div>
             </div>
             {selectedApp.message && (
               <div><p className="text-sm text-gray-600 mb-2">Message</p><p className="bg-gray-50 p-4 rounded-lg">{selectedApp.message}</p></div>

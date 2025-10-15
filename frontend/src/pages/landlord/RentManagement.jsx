@@ -49,48 +49,76 @@ const RentManagement = () => {
   const overdueAmount = payments.filter(p => p.status === 'overdue').reduce((sum, p) => sum + p.amount, 0);
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Rent Management</h1>
-        <p className="text-gray-600">Track rental payments from your tenants</p>
+    <div className="space-y-6 bg-gray-50 min-h-screen p-6">
+      {/* Header - Consza Style */}
+      <div className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-primary-500">
+        <h1 className="text-3xl font-bold text-accent-500 mb-2">Rent Management</h1>
+        <p className="text-gray-600 text-lg">Track rental payments from your tenants</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
+      {/* Stats Grid - Consza Theme */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-green-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Total Revenue</p><p className="text-3xl font-bold text-green-600">${totalRevenue.toLocaleString()}</p></div>
-            <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center"><FaDollarSign className="text-2xl text-green-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Total Revenue</p>
+              <p className="text-3xl font-bold text-accent-500">${totalRevenue.toLocaleString()}</p>
+            </div>
+            <div className="w-14 h-14 bg-green-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaDollarSign className="text-2xl text-green-600" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-yellow-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Pending</p><p className="text-3xl font-bold text-yellow-600">${pendingAmount.toLocaleString()}</p></div>
-            <div className="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center"><FaClock className="text-2xl text-yellow-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Pending</p>
+              <p className="text-3xl font-bold text-accent-500">${pendingAmount.toLocaleString()}</p>
+            </div>
+            <div className="w-14 h-14 bg-yellow-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaClock className="text-2xl text-yellow-600" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-red-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Overdue</p><p className="text-3xl font-bold text-red-600">${overdueAmount.toLocaleString()}</p></div>
-            <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center"><FaExclamationTriangle className="text-2xl text-red-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Overdue</p>
+              <p className="text-3xl font-bold text-accent-500">${overdueAmount.toLocaleString()}</p>
+            </div>
+            <div className="w-14 h-14 bg-red-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaExclamationTriangle className="text-2xl text-red-600" />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 border-b-4 border-primary-500">
           <div className="flex items-center justify-between">
-            <div><p className="text-sm text-gray-600 mb-1">Total Payments</p><p className="text-3xl font-bold text-blue-600">{payments.length}</p></div>
-            <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center"><FaCheckCircle className="text-2xl text-blue-600" /></div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1 uppercase tracking-wide">Total Payments</p>
+              <p className="text-3xl font-bold text-accent-500">{payments.length}</p>
+            </div>
+            <div className="w-14 h-14 bg-primary-500 bg-opacity-20 rounded-full flex items-center justify-center">
+              <FaCheckCircle className="text-2xl text-primary-600" />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h3 className="text-xl font-bold mb-4">Revenue Overview</h3>
-        <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-          <p className="text-gray-500">Revenue chart will be displayed here</p>
+      {/* Revenue Chart */}
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h3 className="text-xl font-bold mb-4 text-accent-500">Revenue Overview</h3>
+        <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+          <div className="text-center">
+            <FaDollarSign className="text-5xl text-gray-400 mx-auto mb-3" />
+            <p className="text-gray-600 font-semibold">Revenue chart will be displayed here</p>
+            <p className="text-sm text-gray-500 mt-2">Monthly earnings visualization</p>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-xl font-bold mb-4">Payment History</h3>
+      {/* Payment History */}
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h3 className="text-xl font-bold mb-4 text-accent-500">Payment History</h3>
         <DataTable columns={columns} data={payments} loading={loading} emptyMessage="No payments found" />
       </div>
     </div>

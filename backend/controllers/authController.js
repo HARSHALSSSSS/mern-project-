@@ -37,13 +37,13 @@ exports.register = async (req, res) => {
       address
     });
 
-    // Create audit log
-    await createAuditLog(
+    // Create audit log asynchronously (don't wait for it)
+    createAuditLog(
       { user: { _id: user._id }, ip: req.ip, get: req.get.bind(req) },
       'user_signup',
       `User ${user.name} registered as ${user.role}`,
       { email: user.email, role: user.role }
-    );
+    ).catch(err => console.error('Audit log error:', err)); // Log errors but don't block response
 
     // Generate token
     const token = generateToken(user._id);
@@ -110,13 +110,13 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Create audit log
-    await createAuditLog(
+    // Create audit log asynchronously (don't wait)
+    createAuditLog(
       { user: { _id: user._id }, ip: req.ip, get: req.get.bind(req) },
       'user_login',
       `User ${user.name} logged in`,
       { email: user.email, role: user.role }
-    );
+    ).catch(err => console.error('Audit log error:', err));
 
     // Generate token
     const token = generateToken(user._id);

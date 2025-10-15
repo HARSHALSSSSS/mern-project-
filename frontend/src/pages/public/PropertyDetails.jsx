@@ -54,11 +54,12 @@ const PropertyDetails = () => {
   const handleApply = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/applications', { property: id, ...applicationData });
+      await axios.post('/applications', { propertyId: id, ...applicationData });
       setShowApplyModal(false);
       alert('Application submitted successfully!');
     } catch (error) {
       console.error('Failed to apply:', error);
+      alert(error.response?.data?.message || 'Failed to submit application. Please try again.');
     }
   };
 

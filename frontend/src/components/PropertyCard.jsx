@@ -22,14 +22,19 @@ const PropertyCard = ({ property, showActions = false, onApply }) => {
       {/* Image */}
       <Link to={`/properties/${property._id}`} className="relative block h-48 sm:h-56 md:h-64 overflow-hidden">
         <img
-          src={property.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'}
+          src={
+            (typeof property.images?.[0] === 'string' 
+              ? property.images[0] 
+              : property.images?.[0]?.url) || 
+            'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+          }
           alt={property.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
         
         {/* Price Badge */}
         <div className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-gradient-to-r from-accent-500 to-accent-600 text-white px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-sm sm:text-base font-bold shadow-btn">
-          ${property.rent}/mo
+          ${property.rent?.amount || property.rent}/mo
         </div>
         
         {/* Status Badge */}
@@ -81,7 +86,7 @@ const PropertyCard = ({ property, showActions = false, onApply }) => {
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2 text-primary-700">
             <FaRulerCombined className="text-accent-500 text-base sm:text-lg" />
-            <span className="font-semibold text-xs sm:text-base">{property.area} sqft</span>
+            <span className="font-semibold text-xs sm:text-base">{property.area?.value || property.area} {property.area?.unit || 'sqft'}</span>
           </div>
         </div>
 
@@ -133,9 +138,24 @@ PropertyCard.propTypes = {
     _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string,
-    rent: PropTypes.number.isRequired,
+    rent: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        amount: PropTypes.number,
+        currency: PropTypes.string,
+        period: PropTypes.string,
+      })
+    ]).isRequired,
     status: PropTypes.string,
-    images: PropTypes.arrayOf(PropTypes.string),
+    images: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({
+          url: PropTypes.string,
+          publicId: PropTypes.string,
+        })
+      ])
+    ),
     address: PropTypes.shape({
       street: PropTypes.string,
       city: PropTypes.string,
@@ -143,7 +163,13 @@ PropertyCard.propTypes = {
     }),
     bedrooms: PropTypes.number,
     bathrooms: PropTypes.number,
-    area: PropTypes.number,
+    area: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        value: PropTypes.number,
+        unit: PropTypes.string,
+      })
+    ]),
     amenities: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   showActions: PropTypes.bool,

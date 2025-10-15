@@ -17,8 +17,39 @@ const AddProperty = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const handleNext = () => {
+    // Validate step 1
+    if (step === 1) {
+      if (!formData.title || !formData.description || formData.rent.amount <= 0 || formData.deposit <= 0 || formData.area.value <= 0) {
+        alert('Please fill in all required fields in Basic Information');
+        return;
+      }
+    }
+    
+    // Validate step 2
+    if (step === 2) {
+      if (!formData.address.street || !formData.address.city || !formData.address.state || !formData.address.zipCode) {
+        alert('Please fill in all required address fields');
+        return;
+      }
+    }
+    
+    setStep(step + 1);
+  };
+
+  const handleBack = () => {
+    setStep(step - 1);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Prevent submission if not on final step
+    if (step < 3) {
+      handleNext();
+      return;
+    }
+    
     setLoading(true);
     try {
       const data = new FormData();
@@ -48,16 +79,17 @@ const AddProperty = () => {
       // Handle images
       images.forEach(img => data.append('images', img));
       
-      await axios.post('/properties', data, {
+      const response = await axios.post('/properties', data, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       
+      alert('Property created successfully!');
       navigate('/landlord/properties');
     } catch (error) {
       console.error('Failed to create property:', error);
-      alert(error.response?.data?.message || error.response?.data?.error || 'Failed to create property');
+      alert(error.response?.data?.message || error.response?.data?.error || 'Failed to create property. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -104,25 +136,25 @@ const AddProperty = () => {
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Monthly Rent *</label>
-                <input type="number" required value={formData.rent.amount} onChange={(e) => setFormData({...formData, rent: {...formData.rent, amount: parseInt(e.target.value)}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="2000" />
+                <input type="number" required value={formData.rent.amount} onChange={(e) => setFormData({...formData, rent: {...formData.rent, amount: parseInt(e.target.value) || 0}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="2000" />
               </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Security Deposit *</label>
-                <input type="number" required value={formData.deposit} onChange={(e) => setFormData({...formData, deposit: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="1000" />
-              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Security Deposit *</label>
+              <input type="number" required value={formData.deposit} onChange={(e) => setFormData({...formData, deposit: parseInt(e.target.value) || 0})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="1000" />
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Bedrooms *</label>
-                <input type="number" required min="0" value={formData.bedrooms} onChange={(e) => setFormData({...formData, bedrooms: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                <input type="number" required min="0" value={formData.bedrooms} onChange={(e) => setFormData({...formData, bedrooms: parseInt(e.target.value) || 0})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Bathrooms *</label>
-                <input type="number" required min="0" value={formData.bathrooms} onChange={(e) => setFormData({...formData, bathrooms: parseInt(e.target.value)})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                <input type="number" required min="0" value={formData.bathrooms} onChange={(e) => setFormData({...formData, bathrooms: parseInt(e.target.value) || 0})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Area (Sq Ft) *</label>
-                <input type="number" required value={formData.area.value} onChange={(e) => setFormData({...formData, area: {...formData.area, value: parseInt(e.target.value)}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+                <input type="number" required value={formData.area.value} onChange={(e) => setFormData({...formData, area: {...formData.area, value: parseInt(e.target.value) || 0}})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
               </div>
             </div>
             <div>
@@ -181,11 +213,31 @@ const AddProperty = () => {
         )}
 
         <div className="flex gap-3 pt-6 border-t mt-6">
-          {step > 1 && <button type="button" onClick={() => setStep(step - 1)} className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Back</button>}
+          {step > 1 && (
+            <button 
+              type="button" 
+              onClick={handleBack} 
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold"
+            >
+              Back
+            </button>
+          )}
           {step < 3 ? (
-            <button type="button" onClick={() => setStep(step + 1)} className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Next</button>
+            <button 
+              type="button" 
+              onClick={handleNext} 
+              className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
+            >
+              Next
+            </button>
           ) : (
-            <button type="submit" disabled={loading} className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50">{loading ? 'Creating...' : 'Create Property'}</button>
+            <button 
+              type="submit" 
+              disabled={loading} 
+              className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+            >
+              {loading ? 'Creating Property...' : 'Create Property'}
+            </button>
           )}
         </div>
       </form>

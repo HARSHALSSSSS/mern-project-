@@ -267,7 +267,7 @@ exports.getMyProperties = async (req, res) => {
     res.status(200).json({
       success: true,
       count: properties.length,
-      properties
+      data: properties
     });
   } catch (error) {
     res.status(500).json({

@@ -22,7 +22,11 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const data = await dashboardService.getDashboardData('tenant');
+        const response = await dashboardService.getDashboardData('tenant');
+        console.log('📊 Dashboard response:', response);
+        // Backend returns { success: true, data: {...} }
+        const data = response.data || response;
+        console.log('📊 Dashboard data:', data);
         setDashboardData(data);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);

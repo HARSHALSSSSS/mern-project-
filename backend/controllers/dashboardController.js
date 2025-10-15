@@ -10,13 +10,25 @@ const User = require('../models/User');
 // @access  Private/Tenant
 exports.getTenantDashboard = async (req, res) => {
   try {
+    console.log('📊 Fetching tenant dashboard for user:', req.user._id);
+    
     // Active contracts
     const activeContracts = await Contract.find({
       tenant: req.user._id,
       status: 'active'
     }).populate('property', 'title address images');
 
-    // Pending applications
+    // Recent applications (all statuses)
+    const recentApplications = await Application.find({
+      tenant: req.user._id
+    })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .populate('property', 'title address images rent');
+    
+    console.log('📋 Recent applications found:', recentApplications.length);
+
+    // Pending applications count
     const pendingApplications = await Application.countDocuments({
       tenant: req.user._id,
       status: 'pending'
@@ -60,15 +72,18 @@ exports.getTenantDashboard = async (req, res) => {
       success: true,
       data: {
         activeContracts,
+        recentApplications,
         pendingApplications,
         paymentsDue,
         maintenanceRequests,
         paymentHistory,
         stats: {
+          activeRentals: activeContracts.length,
           totalContracts: activeContracts.length,
           pendingApplications,
           upcomingPayments: paymentsDue.length,
-          maintenanceCount: maintenanceRequests.length
+          maintenanceCount: maintenanceRequests.length,
+          maintenanceRequests: maintenanceRequests.length
         }
       }
     });

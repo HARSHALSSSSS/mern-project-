@@ -101,6 +101,12 @@ const Navbar = () => {
                   >
                     Sign Up
                   </Link>
+                  <Link 
+                    to="/admin/login" 
+                    className="text-primary-700 hover:text-primary-900 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-neutral-100 border border-primary-300 text-sm"
+                  >
+                    Admin
+                  </Link>
                 </>
               )}
             </div>
@@ -170,9 +176,16 @@ const Navbar = () => {
                       <Link 
                         to="/signup" 
                         onClick={() => setMobileMenuOpen(false)}
-                        className="block text-center bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white px-6 py-3 rounded-xl font-semibold shadow-btn"
+                        className="block text-center bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white px-6 py-3 rounded-xl font-semibold shadow-btn mb-2"
                       >
                         Sign Up
+                      </Link>
+                      <Link 
+                        to="/admin/login" 
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block text-center text-primary-700 hover:bg-neutral-100 font-medium py-2 rounded-lg border border-primary-300"
+                      >
+                        Admin Login
                       </Link>
                     </>
                   )}

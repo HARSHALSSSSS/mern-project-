@@ -144,8 +144,10 @@ const Signup = () => {
               >
                 <option value="tenant">Rent a property (Tenant)</option>
                 <option value="landlord">List my property (Landlord)</option>
-                <option value="admin">Manage the platform (Admin)</option>
               </select>
+              <p className="mt-2 text-xs text-neutral-500">
+                Admin access? <Link to="/admin/login" className="text-primary-600 hover:text-primary-700 font-semibold">Login here</Link>
+              </p>
             </div>
 
             <div>

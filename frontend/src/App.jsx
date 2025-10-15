@@ -15,6 +15,7 @@ import PropertyDetails from './pages/public/PropertyDetails';
 
 // Auth Pages
 import Login from './pages/auth/Login';
+import AdminLogin from './pages/auth/AdminLogin';
 import Signup from './pages/auth/Signup';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
@@ -78,6 +79,7 @@ function App() {
 
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />

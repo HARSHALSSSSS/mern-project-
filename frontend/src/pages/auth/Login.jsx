@@ -53,6 +53,12 @@ const Login = () => {
               create a new account
             </Link>
           </p>
+          <p className="mt-1 text-center text-xs text-neutral-500">
+            Admin user?{' '}
+            <Link to="/admin/login" className="font-semibold text-primary-600 hover:text-primary-700">
+              Admin Login
+            </Link>
+          </p>
         </div>
         
         <form className="mt-8 space-y-6 bg-white p-8 rounded-2xl shadow-card" onSubmit={handleSubmit}>

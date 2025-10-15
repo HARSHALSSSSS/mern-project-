@@ -16,6 +16,16 @@ const Home = () => {
 
   const featuredProperties = properties?.slice(0, 6) || [];
 
+  // Debug logging
+  useEffect(() => {
+    console.log('🏠 Home Page - Properties State:', {
+      properties,
+      loading,
+      featuredProperties,
+      count: properties?.length
+    });
+  }, [properties, loading]);
+
   const handleSearch = (e) => {
     e.preventDefault();
     // Navigate to properties page with filters
@@ -186,6 +196,7 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {loading ? (
+              // Loading skeleton
               Array.from({ length: 6 }).map((_, idx) => (
                 <div key={idx} className="bg-white rounded-lg shadow-lg overflow-hidden animate-pulse">
                   <div className="h-72 bg-gray-300"></div>
@@ -275,10 +286,17 @@ const Home = () => {
                 </div>
               ))
             ) : (
-              <div className="col-span-3 text-center py-12">
+              <div className="col-span-3 text-center py-16 bg-white rounded-lg shadow-lg">
                 <FaHome className="text-gray-300 text-6xl mx-auto mb-4" />
-                <p className="text-gray-500 text-lg mb-2">No properties available at the moment.</p>
-                <p className="text-gray-400 text-sm">Check back soon for new listings!</p>
+                <h3 className="text-2xl font-bold text-gray-700 mb-2">No Properties Available Yet</h3>
+                <p className="text-gray-500 text-lg mb-2">We're working on adding new listings!</p>
+                <p className="text-gray-400 text-sm mb-6">Check back soon or contact us to list your property.</p>
+                {/* Debug info - remove in production */}
+                <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded inline-block">
+                  <p className="text-xs text-gray-600 mb-1">Debug Info:</p>
+                  <p className="text-xs text-gray-500">Properties count: {properties?.length || 0}</p>
+                  <p className="text-xs text-gray-500">Loading: {loading ? 'Yes' : 'No'}</p>
+                </div>
               </div>
             )}
           </div>

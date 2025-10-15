@@ -127,18 +127,18 @@ const PropertyApproval = () => {
     {
       key: 'property',
       label: 'Property',
-      render: (p) => {
-        if (!p) return <div className="text-gray-400">Invalid property data</div>;
+      render: (value, property) => {
+        if (!property) return <div className="text-gray-400">Invalid property data</div>;
         return (
           <div className="flex items-center gap-3">
             <img 
-              src={getImageUrl(p.images?.[0])} 
-              alt={p.title || 'Property'} 
+              src={getImageUrl(property.images?.[0])} 
+              alt={property.title || 'Property'} 
               className="w-16 h-16 rounded-lg object-cover" 
             />
             <div>
-              <p className="font-semibold">{p.title || 'Untitled'}</p>
-              <p className="text-sm text-gray-500 capitalize">{p.type || 'N/A'}</p>
+              <p className="font-semibold">{property.title || 'Untitled'}</p>
+              <p className="text-sm text-gray-500 capitalize">{property.type || 'N/A'}</p>
             </div>
           </div>
         );
@@ -147,36 +147,36 @@ const PropertyApproval = () => {
     { 
       key: 'landlord', 
       label: 'Landlord', 
-      render: (p) => p?.landlord?.name || 'N/A' 
+      render: (value, property) => property?.landlord?.name || 'N/A' 
     },
     { 
       key: 'rent', 
       label: 'Rent', 
-      render: (p) => {
-        if (!p) return 'N/A';
-        const amount = p.rent?.amount || p.rent || 0;
+      render: (value, property) => {
+        if (!property) return 'N/A';
+        const amount = property.rent?.amount || property.rent || 0;
         return `$${amount.toLocaleString()}/mo`;
       }
     },
     { 
       key: 'location', 
       label: 'Location', 
-      render: (p) => {
-        if (!p || !p.address) return 'N/A';
-        return `${p.address.city || 'N/A'}, ${p.address.state || 'N/A'}`;
+      render: (value, property) => {
+        if (!property || !property.address) return 'N/A';
+        return `${property.address.city || 'N/A'}, ${property.address.state || 'N/A'}`;
       }
     },
     {
       key: 'status',
       label: 'Status',
-      render: (p) => {
-        if (!p) return <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase bg-gray-100 text-gray-800">Unknown</span>;
+      render: (value, property) => {
+        if (!property) return <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase bg-gray-100 text-gray-800">Unknown</span>;
         const statusColors = {
           pending: 'bg-yellow-100 text-yellow-800',
           approved: 'bg-green-100 text-green-800',
           rejected: 'bg-red-100 text-red-800'
         };
-        const status = p.approvalStatus || 'unknown';
+        const status = property.approvalStatus || 'unknown';
         return (
           <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${statusColors[status] || 'bg-gray-100 text-gray-800'}`}>
             {status}
@@ -187,9 +187,9 @@ const PropertyApproval = () => {
     { 
       key: 'submitted', 
       label: 'Submitted', 
-      render: (p) => {
-        if (!p || !p.createdAt) return 'N/A';
-        return new Date(p.createdAt).toLocaleDateString();
+      render: (value, property) => {
+        if (!property || !property.createdAt) return 'N/A';
+        return new Date(property.createdAt).toLocaleDateString();
       }
     },
   ];

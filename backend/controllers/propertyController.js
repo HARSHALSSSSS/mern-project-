@@ -24,13 +24,16 @@ exports.getAllProperties = async (req, res) => {
 
     const query = {};
     
-    // If approvalStatus is not specified, default to 'approved' for public access
-    // If specified (e.g., by admin), use the specified value
+    // Approval status filtering logic:
+    // 1. If approvalStatus is explicitly specified in query, use it
+    // 2. If user is admin and no approvalStatus specified, show ALL properties
+    // 3. If user is not admin (or not logged in), only show 'approved' properties
     if (approvalStatus) {
       query.approvalStatus = approvalStatus;
     } else if (!req.user || req.user.role !== 'admin') {
-      query.approvalStatus = 'approved';
+      query.approvalStatus = 'approved';  // Non-admin users only see approved
     }
+    // If admin and no approvalStatus specified, query.approvalStatus remains undefined = show all
 
     if (type) query.type = type;
     if (city) query['address.city'] = { $regex: city, $options: 'i' };

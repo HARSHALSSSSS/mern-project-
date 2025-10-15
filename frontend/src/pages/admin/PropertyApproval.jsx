@@ -21,8 +21,19 @@ const PropertyApproval = () => {
       setLoading(true);
       // Fetch all properties for admin with approval status
       const query = filter === 'all' ? '' : `?approvalStatus=${filter}`;
+      console.log('🔍 Admin fetching properties:', { filter, query, endpoint: `/properties${query}` });
+      
       const response = await axios.get(`/properties${query}`);
       const allProps = response.data.properties || [];
+      
+      console.log('📊 Properties received:', { 
+        count: allProps.length, 
+        properties: allProps.map(p => ({ 
+          title: p.title, 
+          status: p.approvalStatus 
+        })) 
+      });
+      
       setProperties(allProps);
       
       // Calculate stats
@@ -37,7 +48,8 @@ const PropertyApproval = () => {
         total: allProps.length
       });
     } catch (error) {
-      console.error('Failed to fetch properties:', error);
+      console.error('❌ Failed to fetch properties:', error);
+      console.error('Error details:', error.response?.data);
       setProperties([]);
     } finally {
       setLoading(false);

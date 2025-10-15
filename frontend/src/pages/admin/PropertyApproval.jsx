@@ -36,27 +36,32 @@ const PropertyApproval = () => {
       const response = await axios.get(`/properties${query}`);
       const allProps = response.data.properties || [];
       
+      // Filter out any null/undefined properties
+      const validProps = allProps.filter(p => p != null && typeof p === 'object');
+      
       console.log('📊 Properties received:', { 
-        count: allProps.length, 
-        properties: allProps.map(p => ({ 
+        count: validProps.length,
+        total: allProps.length,
+        filtered: allProps.length - validProps.length,
+        properties: validProps.map(p => ({ 
           title: p.title, 
           status: p.approvalStatus 
         })),
         fullResponse: response.data
       });
       
-      setProperties(allProps);
+      setProperties(validProps);
       
-      // Calculate stats
-      const pending = allProps.filter(p => p.approvalStatus === 'pending').length;
-      const approved = allProps.filter(p => p.approvalStatus === 'approved').length;
-      const rejected = allProps.filter(p => p.approvalStatus === 'rejected').length;
+      // Calculate stats - only count valid properties
+      const pending = validProps.filter(p => p && p.approvalStatus === 'pending').length;
+      const approved = validProps.filter(p => p && p.approvalStatus === 'approved').length;
+      const rejected = validProps.filter(p => p && p.approvalStatus === 'rejected').length;
       
       setStats({
         pending,
         approved,
         rejected,
-        total: allProps.length
+        total: validProps.length
       });
     } catch (error) {
       console.error('❌ Failed to fetch properties:', error);
@@ -106,47 +111,59 @@ const PropertyApproval = () => {
     {
       key: 'property',
       label: 'Property',
-      render: (p) => (
-        <div className="flex items-center gap-3">
-          <img 
-            src={getImageUrl(p.images?.[0])} 
-            alt={p.title} 
-            className="w-16 h-16 rounded-lg object-cover" 
-          />
-          <div>
-            <p className="font-semibold">{p.title}</p>
-            <p className="text-sm text-gray-500 capitalize">{p.type || 'N/A'}</p>
+      render: (p) => {
+        if (!p) return <div className="text-gray-400">Invalid property data</div>;
+        return (
+          <div className="flex items-center gap-3">
+            <img 
+              src={getImageUrl(p.images?.[0])} 
+              alt={p.title || 'Property'} 
+              className="w-16 h-16 rounded-lg object-cover" 
+            />
+            <div>
+              <p className="font-semibold">{p.title || 'Untitled'}</p>
+              <p className="text-sm text-gray-500 capitalize">{p.type || 'N/A'}</p>
+            </div>
           </div>
-        </div>
-      ),
+        );
+      }
     },
     { 
       key: 'landlord', 
       label: 'Landlord', 
-      render: (p) => p.landlord?.name || 'N/A' 
+      render: (p) => p?.landlord?.name || 'N/A' 
     },
     { 
       key: 'rent', 
       label: 'Rent', 
-      render: (p) => `$${(p.rent?.amount || p.rent || 0).toLocaleString()}/mo` 
+      render: (p) => {
+        if (!p) return 'N/A';
+        const amount = p.rent?.amount || p.rent || 0;
+        return `$${amount.toLocaleString()}/mo`;
+      }
     },
     { 
       key: 'location', 
       label: 'Location', 
-      render: (p) => `${p.address?.city || 'N/A'}, ${p.address?.state || 'N/A'}` 
+      render: (p) => {
+        if (!p || !p.address) return 'N/A';
+        return `${p.address.city || 'N/A'}, ${p.address.state || 'N/A'}`;
+      }
     },
     {
       key: 'status',
       label: 'Status',
       render: (p) => {
+        if (!p) return <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase bg-gray-100 text-gray-800">Unknown</span>;
         const statusColors = {
           pending: 'bg-yellow-100 text-yellow-800',
           approved: 'bg-green-100 text-green-800',
           rejected: 'bg-red-100 text-red-800'
         };
+        const status = p.approvalStatus || 'unknown';
         return (
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${statusColors[p.approvalStatus] || 'bg-gray-100 text-gray-800'}`}>
-            {p.approvalStatus || 'Unknown'}
+          <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${statusColors[status] || 'bg-gray-100 text-gray-800'}`}>
+            {status}
           </span>
         );
       }
@@ -154,7 +171,10 @@ const PropertyApproval = () => {
     { 
       key: 'submitted', 
       label: 'Submitted', 
-      render: (p) => new Date(p.createdAt).toLocaleDateString() 
+      render: (p) => {
+        if (!p || !p.createdAt) return 'N/A';
+        return new Date(p.createdAt).toLocaleDateString();
+      }
     },
   ];
 

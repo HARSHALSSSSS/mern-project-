@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaHome, FaDollarSign, FaBed, FaBath, FaRuler, FaMapMarkerAlt, FaImage } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const AddProperty = () => {
   const navigate = useNavigate();
@@ -20,21 +20,46 @@ const AddProperty = () => {
     setLoading(true);
     try {
       const data = new FormData();
-      Object.keys(formData).forEach(key => {
-        if (typeof formData[key] === 'object' && !Array.isArray(formData[key])) {
-          Object.keys(formData[key]).forEach(subKey => data.append(`${key}.${subKey}`, formData[key][subKey]));
-        } else if (Array.isArray(formData[key])) {
-          formData[key].forEach(item => data.append(key, item));
-        } else {
-          data.append(key, formData[key]);
-        }
-      });
+      
+      // Handle simple fields
+      data.append('title', formData.title);
+      data.append('type', formData.type);
+      data.append('description', formData.description);
+      data.append('bedrooms', formData.bedrooms);
+      data.append('bathrooms', formData.bathrooms);
+      data.append('squareFeet', formData.squareFeet);
+      data.append('petPolicy', formData.petPolicy);
+      data.append('parkingSpaces', formData.parkingSpaces);
+      
+      // Handle rent as JSON string
+      data.append('rent', JSON.stringify(formData.rent));
+      
+      // Handle address as JSON string
+      data.append('address', JSON.stringify(formData.address));
+      
+      // Handle amenities array
+      if (formData.amenities.length > 0) {
+        data.append('amenities', JSON.stringify(formData.amenities));
+      }
+      
+      // Handle utilities array
+      if (formData.utilities && formData.utilities.length > 0) {
+        data.append('utilities', JSON.stringify(formData.utilities));
+      }
+      
+      // Handle images
       images.forEach(img => data.append('images', img));
       
-      await axios.post('/api/properties', data);
+      await axios.post('/properties', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
       navigate('/landlord/properties');
     } catch (error) {
       console.error('Failed to create property:', error);
+      alert(error.response?.data?.message || 'Failed to create property');
     } finally {
       setLoading(false);
     }

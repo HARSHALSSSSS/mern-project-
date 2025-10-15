@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropertyCard from '../../components/PropertyCard';
 import { FaPlus, FaHome, FaCheckCircle, FaClock } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const MyProperties = () => {
   const [properties, setProperties] = useState([]);
@@ -14,7 +14,7 @@ const MyProperties = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get('/api/properties/landlord/my-properties');
+      const response = await axios.get('/properties/landlord/my-properties');
       setProperties(response.data.data || []);
     } catch (error) {
       console.error('Failed to fetch properties:', error);
@@ -26,7 +26,7 @@ const MyProperties = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this property?')) {
       try {
-        await axios.delete(`/api/properties/${id}`);
+        await axios.delete(`/properties/${id}`);
         fetchProperties();
       } catch (error) {
         console.error('Failed to delete:', error);
@@ -36,7 +36,7 @@ const MyProperties = () => {
 
   const toggleStatus = async (id, currentStatus) => {
     try {
-      await axios.patch(`/api/properties/${id}`, { status: currentStatus === 'available' ? 'occupied' : 'available' });
+      await axios.patch(`/properties/${id}`, { status: currentStatus === 'available' ? 'occupied' : 'available' });
       fetchProperties();
     } catch (error) {
       console.error('Failed to update status:', error);

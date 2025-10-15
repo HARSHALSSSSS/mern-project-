@@ -107,6 +107,20 @@ exports.createProperty = async (req, res) => {
       landlord: req.user._id
     };
 
+    // Parse JSON strings from FormData
+    if (typeof propertyData.rent === 'string') {
+      propertyData.rent = JSON.parse(propertyData.rent);
+    }
+    if (typeof propertyData.address === 'string') {
+      propertyData.address = JSON.parse(propertyData.address);
+    }
+    if (typeof propertyData.amenities === 'string') {
+      propertyData.amenities = JSON.parse(propertyData.amenities);
+    }
+    if (typeof propertyData.utilities === 'string') {
+      propertyData.utilities = JSON.parse(propertyData.utilities);
+    }
+
     // Handle image uploads
     if (req.files && req.files.length > 0) {
       propertyData.images = req.files.map(file => ({

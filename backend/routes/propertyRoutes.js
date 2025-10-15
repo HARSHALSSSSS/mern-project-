@@ -9,10 +9,10 @@ const {
   getMyProperties,
   updatePropertyApproval
 } = require('../controllers/propertyController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, optionalAuth } = require('../middleware/auth');
 const upload = require('../config/multer');
 
-router.get('/', getAllProperties);
+router.get('/', optionalAuth, getAllProperties);  // Optional auth - public can see approved, admin can see all
 router.get('/landlord/my-properties', protect, authorize('landlord', 'admin'), getMyProperties);
 router.get('/:id', getPropertyById);
 router.post('/', protect, authorize('landlord', 'admin'), upload.array('images', 10), createProperty);

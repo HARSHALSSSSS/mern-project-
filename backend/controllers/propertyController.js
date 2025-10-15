@@ -74,7 +74,14 @@ exports.getAllProperties = async (req, res) => {
       count,
       totalInDB: await Property.countDocuments({}),
       returned: properties.length,
-      statuses: properties.map(p => p.approvalStatus)
+      statuses: properties.map(p => p.approvalStatus),
+      landlordPopulated: properties.map(p => ({ 
+        id: p._id, 
+        title: p.title,
+        landlordId: p.landlord?._id,
+        landlordName: p.landlord?.name,
+        hasLandlord: !!p.landlord 
+      }))
     });
 
     res.status(200).json({

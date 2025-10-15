@@ -36,6 +36,22 @@ const PropertyApproval = () => {
       const response = await axios.get(`/properties${query}`);
       const allProps = response.data.properties || [];
       
+      // Log detailed property structure
+      console.log('📦 Raw properties data:', allProps);
+      console.log('📦 First property structure:', allProps[0]);
+      console.log('📦 Property check:', allProps.map((p, i) => ({
+        index: i,
+        isNull: p === null,
+        isUndefined: p === undefined,
+        type: typeof p,
+        hasTitle: p?.title,
+        hasLandlord: p?.landlord,
+        landlordName: p?.landlord?.name,
+        hasImages: p?.images?.length > 0,
+        hasAddress: p?.address,
+        hasRent: p?.rent
+      })));
+      
       // Filter out any null/undefined properties
       const validProps = allProps.filter(p => p != null && typeof p === 'object');
       

@@ -88,7 +88,7 @@ const propertySchema = new mongoose.Schema({
   approvalStatus: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
-    default: 'approved'  // Auto-approve properties for now
+    default: 'pending'  // Properties require admin approval before going live
   },
   featured: {
     type: Boolean,

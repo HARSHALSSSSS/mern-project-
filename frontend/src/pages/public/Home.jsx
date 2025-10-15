@@ -16,16 +16,6 @@ const Home = () => {
 
   const featuredProperties = properties?.slice(0, 6) || [];
 
-  // Debug logging
-  useEffect(() => {
-    console.log('🏠 Home Page - Properties State:', {
-      properties,
-      loading,
-      featuredProperties,
-      count: properties?.length
-    });
-  }, [properties, loading]);
-
   const handleSearch = (e) => {
     e.preventDefault();
     // Navigate to properties page with filters
@@ -290,13 +280,7 @@ const Home = () => {
                 <FaHome className="text-gray-300 text-6xl mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-gray-700 mb-2">No Properties Available Yet</h3>
                 <p className="text-gray-500 text-lg mb-2">We're working on adding new listings!</p>
-                <p className="text-gray-400 text-sm mb-6">Check back soon or contact us to list your property.</p>
-                {/* Debug info - remove in production */}
-                <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded inline-block">
-                  <p className="text-xs text-gray-600 mb-1">Debug Info:</p>
-                  <p className="text-xs text-gray-500">Properties count: {properties?.length || 0}</p>
-                  <p className="text-xs text-gray-500">Loading: {loading ? 'Yes' : 'No'}</p>
-                </div>
+                <p className="text-gray-400 text-sm mb-6">Landlords can list properties and admin will approve them soon.</p>
               </div>
             )}
           </div>

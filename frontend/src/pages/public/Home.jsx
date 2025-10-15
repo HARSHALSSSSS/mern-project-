@@ -22,6 +22,18 @@ const Home = () => {
     window.location.href = `/properties?location=${searchQuery.location}&type=${searchQuery.type}&price=${searchQuery.priceRange}`;
   };
 
+  // Helper function to get full image URL
+  const getImageUrl = (image) => {
+    if (!image) return 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
+    if (typeof image === 'string') {
+      return image.startsWith('http') ? image : `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${image}`;
+    }
+    if (image.url) {
+      return image.url.startsWith('http') ? image.url : `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${image.url}`;
+    }
+    return 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
+  };
+
   return (
     <div className="home-page bg-white">
       {/* Hero Section - Consza Style: Full-width background with dark overlay */}
@@ -192,7 +204,7 @@ const Home = () => {
                 >
                   <div className="relative h-72 overflow-hidden">
                     <img
-                      src={property.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'}
+                      src={getImageUrl(property.images?.[0])}
                       alt={property.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -208,9 +220,19 @@ const Home = () => {
                     <div className="absolute top-4 left-4 bg-primary-500 text-white px-3 py-1 rounded-md text-sm font-bold uppercase">
                       {property.propertyType || 'Property'}
                     </div>
+                    {property.status === 'available' && (
+                      <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-md text-xs font-bold uppercase">
+                        Available
+                      </div>
+                    )}
                   </div>
                   
                   <div className="p-6">
+                    <div className="flex items-center gap-2 text-gray-600 mb-2">
+                      <FaMapMarkerAlt className="text-primary-500 text-sm" />
+                      <span className="text-sm">{property.address?.city || 'Location'}, {property.address?.state || ''}</span>
+                    </div>
+                    
                     <h3 className="text-xl font-bold text-accent-500 mb-3 line-clamp-1">
                       {property.title}
                     </h3>
@@ -222,24 +244,31 @@ const Home = () => {
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                       <div className="flex items-center gap-2 text-gray-700">
                         <FaBed className="text-primary-500" />
-                        <span className="text-sm font-semibold">{property.bedrooms} Beds</span>
+                        <span className="text-sm font-semibold">{property.bedrooms || 0} Beds</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-700">
                         <FaBath className="text-primary-500" />
-                        <span className="text-sm font-semibold">{property.bathrooms} Baths</span>
+                        <span className="text-sm font-semibold">{property.bathrooms || 0} Baths</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-700">
                         <FaRulerCombined className="text-primary-500" />
-                        <span className="text-sm font-semibold">{property.area} sqft</span>
+                        <span className="text-sm font-semibold">{property.area?.value || property.area || 0} sqft</span>
                       </div>
                     </div>
                     
-                    <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-500 text-xs uppercase">Rent</p>
+                        <p className="text-2xl font-bold text-primary-500">
+                          ${property.rent?.amount || property.rent || 0}
+                          <span className="text-sm text-gray-500 font-normal">/mo</span>
+                        </p>
+                      </div>
                       <Link
                         to={`/properties/${property._id}`}
                         className="text-primary-500 font-semibold text-sm uppercase tracking-wide hover:text-accent-500 transition-colors flex items-center gap-2"
                       >
-                        Read More <span>→</span>
+                        View Details <span>→</span>
                       </Link>
                     </div>
                   </div>
@@ -247,7 +276,9 @@ const Home = () => {
               ))
             ) : (
               <div className="col-span-3 text-center py-12">
-                <p className="text-gray-500 text-lg">No properties available at the moment.</p>
+                <FaHome className="text-gray-300 text-6xl mx-auto mb-4" />
+                <p className="text-gray-500 text-lg mb-2">No properties available at the moment.</p>
+                <p className="text-gray-400 text-sm">Check back soon for new listings!</p>
               </div>
             )}
           </div>

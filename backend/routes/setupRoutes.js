@@ -90,4 +90,51 @@ router.post('/fix-admin', async (req, res) => {
   }
 });
 
+// @desc    Get database stats (for debugging)
+// @route   GET /api/setup/db-stats
+// @access  Public (temporary for debugging)
+router.get('/db-stats', async (req, res) => {
+  try {
+    const User = require('../models/User');
+    const Property = require('../models/Property');
+
+    const totalUsers = await User.countDocuments();
+    const totalProperties = await Property.countDocuments();
+    const pendingProperties = await Property.countDocuments({ approvalStatus: 'pending' });
+    const approvedProperties = await Property.countDocuments({ approvalStatus: 'approved' });
+    const rejectedProperties = await Property.countDocuments({ approvalStatus: 'rejected' });
+
+    // Get all properties with basic info
+    const allProperties = await Property.find({})
+      .select('title approvalStatus createdAt landlord')
+      .populate('landlord', 'name email');
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalUsers,
+        totalProperties,
+        pendingProperties,
+        approvedProperties,
+        rejectedProperties
+      },
+      properties: allProperties.map(p => ({
+        id: p._id,
+        title: p.title,
+        status: p.approvalStatus,
+        landlord: p.landlord?.name,
+        createdAt: p.createdAt
+      }))
+    });
+
+  } catch (error) {
+    console.error('DB stats error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;

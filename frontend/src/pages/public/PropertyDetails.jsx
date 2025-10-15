@@ -14,7 +14,11 @@ const PropertyDetails = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [applicationData, setApplicationData] = useState({ moveInDate: '', message: '' });
+  const [applicationData, setApplicationData] = useState({ 
+    moveInDate: '', 
+    message: '',
+    leaseDuration: 12 // Default to 12 months
+  });
 
   // Get API URL from environment
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -208,6 +212,21 @@ const PropertyDetails = () => {
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Desired Move-in Date *</label>
               <input type="date" required value={applicationData.moveInDate} onChange={(e) => setApplicationData({...applicationData, moveInDate: e.target.value})} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Lease Duration (months) *</label>
+              <select 
+                required 
+                value={applicationData.leaseDuration} 
+                onChange={(e) => setApplicationData({...applicationData, leaseDuration: Number(e.target.value)})} 
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="6">6 months</option>
+                <option value="12">12 months</option>
+                <option value="18">18 months</option>
+                <option value="24">24 months</option>
+                <option value="36">36 months</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Message to Landlord</label>

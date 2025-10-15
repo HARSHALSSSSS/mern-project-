@@ -8,7 +8,21 @@ const createAuditLog = require('../middleware/auditLog');
 // @access  Private/Tenant
 exports.createApplication = async (req, res) => {
   try {
+    console.log('📝 Create Application Request:', {
+      body: req.body,
+      user: req.user ? { id: req.user._id, role: req.user.role, name: req.user.name } : 'No user',
+      hasToken: !!req.headers.authorization
+    });
+    
     const { propertyId, message, moveInDate, leaseDuration, employmentInfo, references } = req.body;
+
+    if (!propertyId) {
+      console.log('❌ No propertyId provided');
+      return res.status(400).json({
+        success: false,
+        message: 'Property ID is required'
+      });
+    }
 
     const property = await Property.findById(propertyId);
     if (!property) {
@@ -80,6 +94,8 @@ exports.createApplication = async (req, res) => {
       application
     });
   } catch (error) {
+    console.error('❌ Create Application Error:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({
       success: false,
       message: 'Server error',

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
 import { FaEye, FaTimes, FaClock, FaCheckCircle, FaTimesCircle, FaHome } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -19,7 +19,7 @@ const MyApplications = () => {
   const fetchApplications = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/applications/my-applications');
+      const response = await axios.get('/applications');
       setApplications(response.data.data || []);
     } catch (error) {
       console.error('Failed to fetch applications:', error);

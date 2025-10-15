@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import StatsCard from '../../components/StatsCard';
 import { FaUsers, FaHome, FaDollarSign, FaChartLine, FaUserShield, FaClipboardCheck, FaExclamationTriangle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ users: 0, properties: 0, revenue: 0, applications: 0 });
@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   const fetchDashboard = async () => {
     try {
-      const response = await axios.get('/api/admin/dashboard');
+      const response = await axios.get('/dashboard/admin');
       setStats(response.data.stats || { users: 0, properties: 0, revenue: 0, applications: 0 });
       setRecentUsers(response.data.recentUsers || []);
       setRecentProperties(response.data.recentProperties || []);

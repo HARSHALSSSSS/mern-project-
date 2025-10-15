@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
 import { FaUsers, FaClock, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const TenantApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -16,7 +16,7 @@ const TenantApplications = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await axios.get('/api/applications/landlord');
+      const response = await axios.get('/applications');
       setApplications(response.data.data || []);
     } catch (error) {
       console.error('Failed to fetch:', error);

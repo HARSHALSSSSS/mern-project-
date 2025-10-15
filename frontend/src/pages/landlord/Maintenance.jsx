@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
 import { FaTools, FaClock, FaCheckCircle, FaTimesCircle, FaExclamationTriangle } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const Maintenance = () => {
   const [requests, setRequests] = useState([]);
@@ -16,7 +16,7 @@ const Maintenance = () => {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.get('/api/maintenance/landlord/requests');
+      const response = await axios.get('/maintenance');
       setRequests(response.data.data || []);
     } catch (error) {
       console.error('Failed to fetch:', error);

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
 import { FaHome, FaClock, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const PropertyApproval = () => {
   const [properties, setProperties] = useState([]);
@@ -16,8 +16,8 @@ const PropertyApproval = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get('/api/admin/properties/pending');
-      setProperties(response.data.data || []);
+      const response = await axios.get('/properties?approvalStatus=pending');
+      setProperties(response.data.properties || []);
     } catch (error) {
       console.error('Failed to fetch:', error);
     } finally {
@@ -27,7 +27,7 @@ const PropertyApproval = () => {
 
   const handleApprove = async (id) => {
     try {
-      await axios.patch(`/api/admin/properties/${id}/approve`);
+      await axios.put(`/properties/${id}/approval`, { approvalStatus: 'approved' });
       fetchProperties();
     } catch (error) {
       console.error('Failed to approve:', error);
@@ -36,7 +36,7 @@ const PropertyApproval = () => {
 
   const handleReject = async (id) => {
     try {
-      await axios.patch(`/api/admin/properties/${id}/reject`);
+      await axios.put(`/properties/${id}/approval`, { approvalStatus: 'rejected' });
       fetchProperties();
     } catch (error) {
       console.error('Failed to reject:', error);

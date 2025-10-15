@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
 import { FaUsers, FaUserCheck, FaUserTimes } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -17,8 +17,8 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('/api/admin/users');
-      setUsers(response.data.data || []);
+      const response = await axios.get('/users');
+      setUsers(response.data.users || []);
     } catch (error) {
       console.error('Failed to fetch:', error);
     } finally {
@@ -28,7 +28,8 @@ const UserManagement = () => {
 
   const toggleUserStatus = async (id, currentStatus) => {
     try {
-      await axios.patch(`/api/admin/users/${id}/${currentStatus === 'active' ? 'deactivate' : 'activate'}`);
+      const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+      await axios.put(`/users/${id}/status`, { status: newStatus });
       fetchUsers();
     } catch (error) {
       console.error('Failed to update:', error);

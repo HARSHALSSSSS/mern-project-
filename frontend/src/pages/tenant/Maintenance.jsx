@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
 import { FaTools, FaClock, FaCheckCircle, FaTimesCircle, FaPlus, FaImage } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const Maintenance = () => {
   const [requests, setRequests] = useState([]);
@@ -25,7 +25,7 @@ const Maintenance = () => {
   const fetchRequests = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/maintenance/tenant/my-requests');
+      const response = await axios.get('/maintenance');
       setRequests(response.data.data || []);
     } catch (error) {
       console.error('Failed to fetch requests:', error);
@@ -41,7 +41,7 @@ const Maintenance = () => {
       Object.keys(formData).forEach(key => formDataToSend.append(key, formData[key]));
       images.forEach(image => formDataToSend.append('images', image));
       
-      await axios.post('/api/maintenance/requests', formDataToSend);
+      await axios.post('/maintenance', formDataToSend);
       setShowCreateModal(false);
       setFormData({ title: '', description: '', priority: 'medium', category: 'plumbing' });
       setImages([]);

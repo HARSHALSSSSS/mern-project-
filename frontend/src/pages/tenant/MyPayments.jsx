@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
 import { FaDollarSign, FaClock, FaCheckCircle, FaTimesCircle, FaDownload, FaCreditCard } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const MyPayments = () => {
   const [payments, setPayments] = useState([]);
@@ -18,7 +18,7 @@ const MyPayments = () => {
   const fetchPayments = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/payments/tenant/my-payments');
+      const response = await axios.get('/payments');
       setPayments(response.data.data || []);
     } catch (error) {
       console.error('Failed to fetch payments:', error);

@@ -15,13 +15,22 @@ exports.getAllProperties = async (req, res) => {
       bedrooms,
       bathrooms,
       availability,
+      approvalStatus,
       search,
       page = 1,
       limit = 12,
       sort = '-createdAt'
     } = req.query;
 
-    const query = { approvalStatus: 'approved' };
+    const query = {};
+    
+    // If approvalStatus is not specified, default to 'approved' for public access
+    // If specified (e.g., by admin), use the specified value
+    if (approvalStatus) {
+      query.approvalStatus = approvalStatus;
+    } else if (!req.user || req.user.role !== 'admin') {
+      query.approvalStatus = 'approved';
+    }
 
     if (type) query.type = type;
     if (city) query['address.city'] = { $regex: city, $options: 'i' };

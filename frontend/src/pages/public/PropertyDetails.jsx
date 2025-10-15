@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getPropertyById } from '../../redux/slices/propertySlice';
 import Modal from '../../components/Modal';
 import { FaBed, FaBath, FaRuler, FaMapMarkerAlt, FaHeart, FaCheck, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -23,7 +23,7 @@ const PropertyDetails = () => {
   const handleApply = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/applications', { property: id, ...applicationData });
+      await axios.post('/applications', { property: id, ...applicationData });
       setShowApplyModal(false);
       alert('Application submitted successfully!');
     } catch (error) {

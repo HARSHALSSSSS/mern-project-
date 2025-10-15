@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FaFileContract, FaDownload, FaCheckCircle, FaClock, FaTimesCircle, FaCalendarAlt } from 'react-icons/fa';
 import Modal from '../../components/Modal';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const MyContracts = () => {
   const [contracts, setContracts] = useState([]);
@@ -16,7 +16,7 @@ const MyContracts = () => {
   const fetchContracts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/contracts/tenant/my-contracts');
+      const response = await axios.get('/contracts');
       setContracts(response.data.data || []);
     } catch (error) {
       console.error('Failed to fetch contracts:', error);

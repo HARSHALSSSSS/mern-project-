@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import StatsCard from '../../components/StatsCard';
 import DataTable from '../../components/DataTable';
 import { FaHome, FaUsers, FaDollarSign, FaTools, FaChartLine, FaPlus, FaCheckCircle, FaClock } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ properties: 0, tenants: 0, revenue: 0, requests: 0 });
@@ -17,7 +17,7 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await axios.get('/api/landlord/dashboard');
+      const response = await axios.get('/dashboard/landlord');
       setStats(response.data.stats || { properties: 0, tenants: 0, revenue: 0, requests: 0 });
       setRecentApplications(response.data.recentApplications || []);
       setProperties(response.data.properties || []);

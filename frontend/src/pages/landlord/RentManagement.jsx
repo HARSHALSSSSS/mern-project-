@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import DataTable from '../../components/DataTable';
 import { FaDollarSign, FaCheckCircle, FaClock, FaExclamationTriangle } from 'react-icons/fa';
-import axios from 'axios';
+import axios from '../../services/axios';
 
 const RentManagement = () => {
   const [payments, setPayments] = useState([]);
@@ -13,7 +13,7 @@ const RentManagement = () => {
 
   const fetchPayments = async () => {
     try {
-      const response = await axios.get('/api/payments/landlord');
+      const response = await axios.get('/payments');
       setPayments(response.data.data || []);
     } catch (error) {
       console.error('Failed to fetch:', error);

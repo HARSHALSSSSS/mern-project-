@@ -25,7 +25,7 @@ router.post('/admin', async (req, res) => {
       password: 'admin123', // Will be hashed automatically by User model
       role: 'admin',
       phone: '+1234567890',
-      isActive: true
+      status: 'active'  // Fixed: was 'isActive: true' which is wrong field name
     });
 
     res.status(201).json({
@@ -41,6 +41,47 @@ router.post('/admin', async (req, res) => {
 
   } catch (error) {
     console.error('Admin creation error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message
+    });
+  }
+});
+
+// @desc    Fix existing admin user status (ONE TIME FIX)
+// @route   POST /api/setup/fix-admin
+// @access  Public (temporary fix endpoint)
+router.post('/fix-admin', async (req, res) => {
+  try {
+    // Find admin user
+    const adminUser = await User.findOne({ email: 'admin@realestate.com' });
+    
+    if (!adminUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'Admin user not found. Please create admin first using /api/setup/admin'
+      });
+    }
+
+    // Update the admin user status
+    adminUser.status = 'active';
+    await adminUser.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Admin user status fixed successfully',
+      admin: {
+        id: adminUser._id,
+        name: adminUser.name,
+        email: adminUser.email,
+        role: adminUser.role,
+        status: adminUser.status
+      }
+    });
+
+  } catch (error) {
+    console.error('Admin fix error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error',

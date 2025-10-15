@@ -2,36 +2,37 @@
 import PropTypes from 'prop-types';
 
 const StatsCard = ({ title, value, icon: Icon, color = 'primary', trend, trendValue, onClick }) => {
+  // Consza Theme Colors
   const colorClasses = {
-    primary: 'bg-primary-100 text-primary-600',
-    accent: 'bg-accent-100 text-accent-600',
-    success: 'bg-success-100 text-success-500',
-    warning: 'bg-warning-100 text-warning-500',
-    error: 'bg-error-100 text-error-500',
-    blue: 'bg-primary-100 text-primary-600',
-    green: 'bg-success-100 text-success-500',
-    yellow: 'bg-warning-100 text-warning-500',
-    red: 'bg-error-100 text-error-500',
+    primary: 'bg-primary-100 text-primary-600', // Orange
+    accent: 'bg-accent-100 text-accent-600', // Navy
+    success: 'bg-green-100 text-green-600',
+    warning: 'bg-yellow-100 text-yellow-600',
+    error: 'bg-red-100 text-red-600',
+    blue: 'bg-blue-100 text-blue-600',
+    green: 'bg-green-100 text-green-600',
+    yellow: 'bg-yellow-100 text-yellow-600',
+    red: 'bg-red-100 text-red-600',
     purple: 'bg-purple-100 text-purple-600',
     indigo: 'bg-indigo-100 text-indigo-600',
   };
 
   return (
     <div
-      className={`bg-white rounded-xl shadow-card hover:shadow-lg transition-all duration-300 p-6 ${
+      className={`bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 p-6 border-b-4 border-primary-500 ${
         onClick ? 'cursor-pointer hover:-translate-y-1' : ''
       }`}
       onClick={onClick}
     >
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-neutral-500 text-sm font-semibold uppercase tracking-wide">{title}</p>
-          <h3 className="text-3xl font-bold text-primary-700 mt-2">{value}</h3>
+          <p className="text-gray-600 text-sm font-semibold uppercase tracking-wide">{title}</p>
+          <h3 className="text-3xl font-bold text-accent-500 mt-2">{value}</h3>
           {trend && trendValue && (
             <div className="flex items-center gap-1 mt-3">
               <span
                 className={`flex items-center text-sm font-bold ${
-                  trend === 'up' ? 'text-success-500' : 'text-error-500'
+                  trend === 'up' ? 'text-green-600' : 'text-red-600'
                 }`}
               >
                 {trend === 'up' ? (
@@ -45,11 +46,11 @@ const StatsCard = ({ title, value, icon: Icon, color = 'primary', trend, trendVa
                 )}
                 {trendValue}%
               </span>
-              <span className="text-neutral-500 text-xs font-medium">vs last month</span>
+              <span className="text-gray-500 text-xs font-medium">vs last month</span>
             </div>
           )}
         </div>
-        <div className={`w-16 h-16 rounded-xl flex items-center justify-center shadow ${colorClasses[color]}`}>
+        <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg ${colorClasses[color]}`}>
           <Icon className="text-3xl" />
         </div>
       </div>

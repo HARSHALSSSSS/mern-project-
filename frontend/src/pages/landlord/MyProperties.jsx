@@ -35,7 +35,8 @@ const MyProperties = () => {
   const fetchProperties = async () => {
     try {
       const response = await axios.get('/properties/landlord/my-properties');
-      setProperties(response.data.data || []);
+      console.log('🏠 Landlord properties response:', response.data);
+      setProperties(response.data.properties || response.data.data || []);
     } catch (error) {
       console.error('Failed to fetch properties:', error);
       alert('Failed to load properties. Please try again.');

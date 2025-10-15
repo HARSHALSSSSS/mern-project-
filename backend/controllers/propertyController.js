@@ -24,6 +24,13 @@ exports.getAllProperties = async (req, res) => {
 
     const query = {};
     
+    // Log the request for debugging
+    console.log('📋 GET /api/properties - Request:', {
+      user: req.user ? { id: req.user._id, role: req.user.role } : 'Not authenticated',
+      approvalStatus,
+      hasApprovalStatusParam: !!approvalStatus
+    });
+    
     // Approval status filtering logic:
     // 1. If approvalStatus is explicitly specified in query, use it
     // 2. If user is admin and no approvalStatus specified, show ALL properties
@@ -34,6 +41,8 @@ exports.getAllProperties = async (req, res) => {
       query.approvalStatus = 'approved';  // Non-admin users only see approved
     }
     // If admin and no approvalStatus specified, query.approvalStatus remains undefined = show all
+    
+    console.log('🔍 Query filter:', query);
 
     if (type) query.type = type;
     if (city) query['address.city'] = { $regex: city, $options: 'i' };
@@ -60,6 +69,13 @@ exports.getAllProperties = async (req, res) => {
       .sort(sort);
 
     const count = await Property.countDocuments(query);
+    
+    console.log('✅ Properties found:', {
+      count,
+      totalInDB: await Property.countDocuments({}),
+      returned: properties.length,
+      statuses: properties.map(p => p.approvalStatus)
+    });
 
     res.status(200).json({
       success: true,
@@ -279,7 +295,7 @@ exports.getMyProperties = async (req, res) => {
     res.status(200).json({
       success: true,
       count: properties.length,
-      data: properties
+      properties: properties  // Changed from 'data' to 'properties' for consistency
     });
   } catch (error) {
     res.status(500).json({

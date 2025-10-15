@@ -1,3 +1,5 @@
+import AdminFloatingButton from '../../components/AdminFloatingButton';
+
 const About = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -5,6 +7,9 @@ const About = () => {
       <p className="text-lg text-gray-700">
         Welcome to RealEstate - Your trusted partner in property management and rentals.
       </p>
+
+      {/* Admin Floating Button */}
+      <AdminFloatingButton position="bottom-right" />
     </div>
   );
 };

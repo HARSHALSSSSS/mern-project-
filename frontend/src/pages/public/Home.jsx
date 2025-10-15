@@ -3,6 +3,7 @@ import { FaSearch, FaMapMarkerAlt, FaHome, FaBed, FaBath, FaRulerCombined, FaChe
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProperties } from '../../redux/slices/propertySlice';
+import AdminFloatingButton from '../../components/AdminFloatingButton';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -368,6 +369,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Admin Floating Button */}
+      <AdminFloatingButton position="bottom-right" />
     </div>
   );
 };

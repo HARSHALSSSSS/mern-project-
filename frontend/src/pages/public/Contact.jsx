@@ -1,3 +1,5 @@
+import AdminFloatingButton from '../../components/AdminFloatingButton';
+
 const Contact = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -10,6 +12,9 @@ const Contact = () => {
           <button type="submit" className="btn-primary">Send Message</button>
         </form>
       </div>
+
+      {/* Admin Floating Button */}
+      <AdminFloatingButton position="bottom-right" />
     </div>
   );
 };

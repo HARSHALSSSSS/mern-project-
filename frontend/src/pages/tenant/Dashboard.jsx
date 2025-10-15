@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { 
   FaHome, FaDollarSign, FaWrench, FaFileAlt, 
   FaCheckCircle, FaClock, FaExclamationTriangle,
-  FaBed, FaBath, FaMapMarkerAlt, FaCalendar
+  FaBed, FaBath, FaMapMarkerAlt, FaCalendar, FaRuler
 } from 'react-icons/fa';
 import StatsCard from '../../components/StatsCard';
+import PropertyCard from '../../components/PropertyCard';
 import dashboardService from '../../services/dashboardService';
+import { getProperties } from '../../redux/slices/propertySlice';
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const { properties: availableProperties, loading: propertiesLoading } = useSelector((state) => state.properties);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +40,9 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, []);
+    // Fetch available properties
+    dispatch(getProperties());
+  }, [dispatch]);
 
   if (loading) {
     return (
@@ -194,6 +200,47 @@ const Dashboard = () => {
               <Link to="/properties" className="inline-block bg-primary-500 hover:bg-primary-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm transition-all duration-300">
                 Browse Properties
               </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Featured/Available Properties Section */}
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Available Properties</h2>
+              <p className="text-sm text-gray-600">Find your perfect rental home</p>
+            </div>
+            <Link to="/properties" className="inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-2.5 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-semibold text-sm transition-all duration-300">
+              <FaHome className="mr-2 text-sm" />
+              View All Properties
+            </Link>
+          </div>
+          
+          {propertiesLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                  <div className="h-48 bg-gray-300"></div>
+                  <div className="p-4">
+                    <div className="h-4 bg-gray-300 rounded mb-3"></div>
+                    <div className="h-6 bg-gray-300 rounded mb-3"></div>
+                    <div className="h-4 bg-gray-300 rounded"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : availableProperties && availableProperties.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {availableProperties.slice(0, 6).map((property) => (
+                <PropertyCard key={property._id} property={property} showActions={true} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 sm:py-12 bg-gray-50 rounded-lg">
+              <FaHome className="text-gray-400 text-4xl sm:text-5xl mx-auto mb-3 sm:mb-4" />
+              <p className="text-gray-600 text-base sm:text-lg mb-3 sm:mb-4">No properties available at the moment</p>
+              <p className="text-gray-500 text-sm mb-4">Check back later for new listings</p>
             </div>
           )}
         </div>

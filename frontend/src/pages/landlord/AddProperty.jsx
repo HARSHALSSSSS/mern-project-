@@ -34,22 +34,39 @@ const AddProperty = () => {
       }
     }
     
+    console.log('Moving to step:', step + 1);
     setStep(step + 1);
   };
 
-  const handleBack = () => {
+  const handleBack = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    console.log('Going back to step:', step - 1);
     setStep(step - 1);
+  };
+
+  const handleNextClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleNext();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
+    
+    console.log('=== FORM SUBMIT TRIGGERED ===');
+    console.log('Current step:', step);
     
     // Prevent submission if not on final step
     if (step < 3) {
-      handleNext();
-      return;
+      console.log('⚠️ Blocked submission - not on step 3. Ignoring.');
+      return false;
     }
     
+    console.log('✅ On step 3, proceeding with property creation...');
     setLoading(true);
     try {
       const data = new FormData();
@@ -132,7 +149,13 @@ const AddProperty = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
+      <form onSubmit={handleSubmit} onKeyDown={(e) => {
+        // Prevent Enter key from submitting form unless on final step
+        if (e.key === 'Enter' && step < 3) {
+          e.preventDefault();
+          handleNext();
+        }
+      }} className="bg-white rounded-lg shadow-md p-6">
         {step === 1 && (
           <div className="space-y-4">
             <h3 className="text-xl font-bold mb-4">Basic Information</h3>
@@ -242,7 +265,7 @@ const AddProperty = () => {
           {step < 3 ? (
             <button 
               type="button" 
-              onClick={handleNext} 
+              onClick={handleNextClick} 
               className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
             >
               Next

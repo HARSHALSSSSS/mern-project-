@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
-import { FaHome, FaClock, FaCheckCircle, FaTimesCircle, FaFilter } from 'react-icons/fa';
+import { FaHome, FaClock, FaCheckCircle, FaTimesCircle, FaFilter, FaSync } from 'react-icons/fa';
 import axios from '../../services/axios';
 
 const PropertyApproval = () => {
@@ -19,6 +19,16 @@ const PropertyApproval = () => {
   const fetchProperties = async () => {
     try {
       setLoading(true);
+      
+      // Check authentication first
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      console.log('🔐 Auth check:', { 
+        hasToken: !!token, 
+        user: user,
+        userRole: user?.role 
+      });
+      
       // Fetch all properties for admin with approval status
       const query = filter === 'all' ? '' : `?approvalStatus=${filter}`;
       console.log('🔍 Admin fetching properties:', { filter, query, endpoint: `/properties${query}` });
@@ -31,7 +41,8 @@ const PropertyApproval = () => {
         properties: allProps.map(p => ({ 
           title: p.title, 
           status: p.approvalStatus 
-        })) 
+        })),
+        fullResponse: response.data
       });
       
       setProperties(allProps);
@@ -149,9 +160,21 @@ const PropertyApproval = () => {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Property Management</h1>
-        <p className="text-gray-600">Review, approve, and manage all property listings</p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Property Management</h1>
+          <p className="text-gray-600">Review, approve, and manage all property listings</p>
+        </div>
+        <button
+          onClick={() => {
+            console.log('🔄 Manual refresh triggered');
+            fetchProperties();
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-semibold transition-colors"
+        >
+          <FaSync className="text-sm" />
+          Refresh
+        </button>
       </div>
 
       {/* Stats Cards */}

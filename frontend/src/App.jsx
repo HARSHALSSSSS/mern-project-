@@ -35,6 +35,7 @@ import EditProperty from './pages/landlord/EditProperty';
 import TenantApplications from './pages/landlord/TenantApplications';
 import RentManagement from './pages/landlord/RentManagement';
 import LandlordMaintenance from './pages/landlord/Maintenance';
+import LandlordContracts from './pages/landlord/Contracts';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard';
@@ -105,6 +106,7 @@ function App() {
             <Route path="/landlord/properties/add" element={<AddProperty />} />
             <Route path="/landlord/properties/edit/:id" element={<EditProperty />} />
             <Route path="/landlord/applications" element={<TenantApplications />} />
+            <Route path="/landlord/contracts" element={<LandlordContracts />} />
             <Route path="/landlord/rent" element={<RentManagement />} />
             <Route path="/landlord/maintenance" element={<LandlordMaintenance />} />
             <Route path="/landlord/notifications" element={<Notifications />} />

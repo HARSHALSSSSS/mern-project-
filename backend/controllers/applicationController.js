@@ -124,6 +124,13 @@ exports.getAllApplications = async (req, res) => {
     }
     
     console.log('📋 Application query:', query);
+    
+    // First, let's see ALL applications in the database for this landlord
+    if (req.user.role === 'landlord') {
+      const allAppsForLandlord = await Application.find({ landlord: req.user._id });
+      console.log('🔍 Total applications for this landlord in DB:', allAppsForLandlord.length);
+      console.log('🔍 Application IDs:', allAppsForLandlord.map(a => a._id));
+    }
 
     const { status, page = 1, limit = 10 } = req.query;
     if (status) query.status = status;

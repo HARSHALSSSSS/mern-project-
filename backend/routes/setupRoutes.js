@@ -97,16 +97,27 @@ router.get('/db-stats', async (req, res) => {
   try {
     const User = require('../models/User');
     const Property = require('../models/Property');
+    const Application = require('../models/Application');
 
     const totalUsers = await User.countDocuments();
     const totalProperties = await Property.countDocuments();
     const pendingProperties = await Property.countDocuments({ approvalStatus: 'pending' });
     const approvedProperties = await Property.countDocuments({ approvalStatus: 'approved' });
     const rejectedProperties = await Property.countDocuments({ approvalStatus: 'rejected' });
+    
+    const totalApplications = await Application.countDocuments();
+    const pendingApplications = await Application.countDocuments({ status: 'pending' });
 
     // Get all properties with basic info
     const allProperties = await Property.find({})
       .select('title approvalStatus createdAt landlord')
+      .populate('landlord', 'name email');
+      
+    // Get all applications with basic info
+    const allApplications = await Application.find({})
+      .select('status createdAt tenant property landlord')
+      .populate('tenant', 'name email')
+      .populate('property', 'title')
       .populate('landlord', 'name email');
 
     res.status(200).json({
@@ -116,14 +127,28 @@ router.get('/db-stats', async (req, res) => {
         totalProperties,
         pendingProperties,
         approvedProperties,
-        rejectedProperties
+        rejectedProperties,
+        totalApplications,
+        pendingApplications
       },
       properties: allProperties.map(p => ({
         id: p._id,
         title: p.title,
         status: p.approvalStatus,
         landlord: p.landlord?.name,
+        landlordId: p.landlord?._id,
         createdAt: p.createdAt
+      })),
+      applications: allApplications.map(a => ({
+        id: a._id,
+        property: a.property?.title,
+        tenant: a.tenant?.name,
+        tenantEmail: a.tenant?.email,
+        landlord: a.landlord?.name,
+        landlordEmail: a.landlord?.email,
+        landlordId: a.landlord?._id,
+        status: a.status,
+        createdAt: a.createdAt
       }))
     });
 

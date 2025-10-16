@@ -170,10 +170,32 @@ exports.createProperty = async (req, res) => {
     // Handle image uploads
     if (req.files && req.files.length > 0) {
       console.log('✅ IMAGES RECEIVED! Count:', req.files.length);
-      propertyData.images = req.files.map(file => ({
-        url: `/uploads/${file.filename}`,
-        publicId: file.filename
-      }));
+      
+      // Check if Cloudinary is configured
+      if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY) {
+        // Upload to Cloudinary for production
+        console.log('☁️ Uploading to Cloudinary...');
+        propertyData.images = await Promise.all(
+          req.files.map(async (file) => {
+            const result = await cloudinary.uploader.upload(file.path, {
+              folder: 'real-estate-properties',
+              resource_type: 'auto'
+            });
+            return {
+              url: result.secure_url,
+              publicId: result.public_id
+            };
+          })
+        );
+        console.log('☁️ Cloudinary upload complete');
+      } else {
+        // Fallback to local uploads for development
+        console.log('💾 Using local uploads (development mode)');
+        propertyData.images = req.files.map(file => ({
+          url: `/uploads/${file.filename}`,
+          publicId: file.filename
+        }));
+      }
       console.log('📷 Saved image paths:', propertyData.images);
     } else {
       console.log('⚠️ NO FILES RECEIVED - req.files:', req.files);
@@ -234,10 +256,32 @@ exports.updateProperty = async (req, res) => {
     // Handle new image uploads
     if (req.files && req.files.length > 0) {
       console.log('✅ NEW IMAGES RECEIVED! Count:', req.files.length);
-      const newImages = req.files.map(file => ({
-        url: `/uploads/${file.filename}`,
-        publicId: file.filename
-      }));
+      
+      let newImages;
+      if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY) {
+        // Upload to Cloudinary
+        console.log('☁️ Uploading to Cloudinary...');
+        newImages = await Promise.all(
+          req.files.map(async (file) => {
+            const result = await cloudinary.uploader.upload(file.path, {
+              folder: 'real-estate-properties',
+              resource_type: 'auto'
+            });
+            return {
+              url: result.secure_url,
+              publicId: result.public_id
+            };
+          })
+        );
+      } else {
+        // Fallback to local uploads
+        console.log('💾 Using local uploads (development mode)');
+        newImages = req.files.map(file => ({
+          url: `/uploads/${file.filename}`,
+          publicId: file.filename
+        }));
+      }
+      
       req.body.images = [...(property.images || []), ...newImages];
       console.log('📷 Updated image paths:', req.body.images);
     } else {

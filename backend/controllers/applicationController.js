@@ -109,6 +109,12 @@ exports.createApplication = async (req, res) => {
 // @access  Private
 exports.getAllApplications = async (req, res) => {
   try {
+    console.log('📋 Get All Applications - User:', { 
+      id: req.user._id, 
+      role: req.user.role,
+      name: req.user.name 
+    });
+    
     let query = {};
 
     if (req.user.role === 'tenant') {
@@ -116,6 +122,8 @@ exports.getAllApplications = async (req, res) => {
     } else if (req.user.role === 'landlord') {
       query.landlord = req.user._id;
     }
+    
+    console.log('📋 Application query:', query);
 
     const { status, page = 1, limit = 10 } = req.query;
     if (status) query.status = status;
@@ -129,6 +137,12 @@ exports.getAllApplications = async (req, res) => {
       .sort({ createdAt: -1 });
 
     const count = await Application.countDocuments(query);
+    
+    console.log('✅ Applications found:', { 
+      count, 
+      returned: applications.length,
+      statuses: applications.map(a => ({ id: a._id, status: a.status, property: a.property?.title }))
+    });
 
     res.status(200).json({
       success: true,
@@ -138,6 +152,7 @@ exports.getAllApplications = async (req, res) => {
       applications
     });
   } catch (error) {
+    console.error('❌ Get Applications Error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error',

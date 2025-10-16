@@ -17,9 +17,14 @@ const TenantApplications = () => {
   const fetchApplications = async () => {
     try {
       const response = await axios.get('/applications');
-      setApplications(response.data.data || []);
+      console.log('📋 Landlord Applications Response:', response.data);
+      // Backend returns: { success, count, applications }
+      const apps = response.data.applications || response.data.data || [];
+      console.log('📋 Applications found:', apps.length);
+      setApplications(apps);
     } catch (error) {
-      console.error('Failed to fetch:', error);
+      console.error('Failed to fetch applications:', error);
+      console.error('Error details:', error.response?.data);
     } finally {
       setLoading(false);
     }
@@ -27,19 +32,29 @@ const TenantApplications = () => {
 
   const handleApprove = async (id) => {
     try {
-      await axios.patch(`/api/applications/${id}/approve`);
+      console.log('✅ Approving application:', id);
+      await axios.put(`/applications/${id}/status`, { status: 'approved' });
+      alert('Application approved successfully!');
       fetchApplications();
     } catch (error) {
       console.error('Failed to approve:', error);
+      alert(error.response?.data?.message || 'Failed to approve application');
     }
   };
 
   const handleReject = async (id) => {
+    const rejectionReason = prompt('Please provide a reason for rejection (optional):');
     try {
-      await axios.patch(`/api/applications/${id}/reject`);
+      console.log('❌ Rejecting application:', id);
+      await axios.put(`/applications/${id}/status`, { 
+        status: 'rejected',
+        rejectionReason 
+      });
+      alert('Application rejected successfully!');
       fetchApplications();
     } catch (error) {
       console.error('Failed to reject:', error);
+      alert(error.response?.data?.message || 'Failed to reject application');
     }
   };
 
@@ -47,23 +62,37 @@ const TenantApplications = () => {
     {
       key: 'tenant',
       label: 'Tenant',
-      render: (a) => (
+      render: (value, app) => (
         <div>
-          <p className="font-semibold">{a.tenant?.name}</p>
-          <p className="text-sm text-gray-500">{a.tenant?.email}</p>
+          <p className="font-semibold">{app?.tenant?.name || 'N/A'}</p>
+          <p className="text-sm text-gray-500">{app?.tenant?.email || 'N/A'}</p>
         </div>
       ),
     },
-    { key: 'property', label: 'Property', render: (a) => a.property?.title },
+    { 
+      key: 'property', 
+      label: 'Property', 
+      render: (value, app) => app?.property?.title || 'N/A'
+    },
     {
       key: 'status',
       label: 'Status',
-      render: (a) => {
-        const config = { pending: 'bg-yellow-100 text-yellow-800', approved: 'bg-green-100 text-green-800', rejected: 'bg-red-100 text-red-800' };
-        return <span className={`px-3 py-1 rounded-full text-sm font-semibold ${config[a.status]}`}>{a.status}</span>;
+      render: (value, app) => {
+        const config = { 
+          pending: 'bg-yellow-100 text-yellow-800', 
+          approved: 'bg-green-100 text-green-800', 
+          rejected: 'bg-red-100 text-red-800' 
+        };
+        return <span className={`px-3 py-1 rounded-full text-sm font-semibold ${config[app?.status] || 'bg-gray-100 text-gray-800'}`}>
+          {app?.status || 'unknown'}
+        </span>;
       },
     },
-    { key: 'date', label: 'Applied', render: (a) => new Date(a.createdAt).toLocaleDateString() },
+    { 
+      key: 'date', 
+      label: 'Applied', 
+      render: (value, app) => app?.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'
+    },
   ];
 
   return (

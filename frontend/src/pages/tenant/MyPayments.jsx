@@ -19,7 +19,9 @@ const MyPayments = () => {
     try {
       setLoading(true);
       const response = await axios.get('/payments');
-      setPayments(response.data.data || []);
+      console.log('💰 My Payments Response:', response.data);
+      // Backend returns: { success, count, payments }
+      setPayments(response.data.payments || []);
     } catch (error) {
       console.error('Failed to fetch payments:', error);
     } finally {
@@ -43,11 +45,13 @@ const MyPayments = () => {
     e.preventDefault();
     setPaymentProcessing(true);
     try {
-      await axios.post(`/api/payments/${selectedPayment._id}/pay`, { method: 'stripe' });
+      await axios.post(`/payments/${selectedPayment._id}/pay`, { method: 'stripe' });
       setShowPaymentModal(false);
+      alert('Payment processed successfully!');
       fetchPayments();
     } catch (error) {
       console.error('Payment failed:', error);
+      alert(error.response?.data?.message || 'Payment processing failed');
     } finally {
       setPaymentProcessing(false);
     }
@@ -73,27 +77,27 @@ const MyPayments = () => {
       key: 'month',
       label: 'Payment For',
       sortable: true,
-      render: (p) => (
+      render: (value, payment) => (
         <div>
-          <p className="font-semibold">{p.type === 'rent' ? 'Monthly Rent' : p.type}</p>
-          <p className="text-sm text-gray-500">{new Date(p.dueDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+          <p className="font-semibold">{payment?.type === 'rent' ? 'Monthly Rent' : payment?.type || 'N/A'}</p>
+          <p className="text-sm text-gray-500">{payment?.dueDate ? new Date(payment.dueDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'N/A'}</p>
         </div>
       ),
     },
-    { key: 'amount', label: 'Amount', sortable: true, render: (p) => <span className="font-semibold text-lg">${p.amount?.toLocaleString()}</span> },
+    { key: 'amount', label: 'Amount', sortable: true, render: (value, payment) => <span className="font-semibold text-lg">${payment?.amount?.toLocaleString() || 0}</span> },
     {
       key: 'dueDate',
       label: 'Due Date',
       sortable: true,
-      render: (p) => (
+      render: (value, payment) => (
         <div>
-          <p>{new Date(p.dueDate).toLocaleDateString()}</p>
-          {p.status === 'overdue' && <p className="text-xs text-red-600 font-semibold mt-1">{Math.floor((new Date() - new Date(p.dueDate)) / 86400000)} days overdue</p>}
+          <p>{payment?.dueDate ? new Date(payment.dueDate).toLocaleDateString() : 'N/A'}</p>
+          {payment?.status === 'overdue' && payment?.dueDate && <p className="text-xs text-red-600 font-semibold mt-1">{Math.floor((new Date() - new Date(payment.dueDate)) / 86400000)} days overdue</p>}
         </div>
       ),
     },
-    { key: 'status', label: 'Status', sortable: true, render: (p) => getStatusBadge(p.status) },
-    { key: 'paidDate', label: 'Paid Date', sortable: false, render: (p) => p.paidDate ? new Date(p.paidDate).toLocaleDateString() : '-' },
+    { key: 'status', label: 'Status', sortable: true, render: (value, payment) => getStatusBadge(payment?.status) },
+    { key: 'paidDate', label: 'Paid Date', sortable: false, render: (value, payment) => payment?.paidDate ? new Date(payment.paidDate).toLocaleDateString() : '-' },
   ];
 
   const totalPaid = payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0);

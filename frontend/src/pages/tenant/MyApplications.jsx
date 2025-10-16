@@ -20,7 +20,9 @@ const MyApplications = () => {
     try {
       setLoading(true);
       const response = await axios.get('/applications');
-      setApplications(response.data.data || []);
+      console.log('📋 My Applications Response:', response.data);
+      // Backend returns: { success, count, applications }
+      setApplications(response.data.applications || []);
     } catch (error) {
       console.error('Failed to fetch applications:', error);
     } finally {
@@ -46,11 +48,13 @@ const MyApplications = () => {
 
   const handleWithdraw = async () => {
     try {
-      await axios.patch(`/api/applications/${selectedApplication._id}/withdraw`);
+      await axios.put(`/applications/${selectedApplication._id}/withdraw`);
       setShowWithdrawModal(false);
+      alert('Application withdrawn successfully!');
       fetchApplications();
     } catch (error) {
       console.error('Failed to withdraw:', error);
+      alert(error.response?.data?.message || 'Failed to withdraw application');
     }
   };
 
@@ -59,22 +63,22 @@ const MyApplications = () => {
       key: 'property',
       label: 'Property',
       sortable: true,
-      render: (app) => (
+      render: (value, app) => (
         <div className="flex items-center gap-3">
           <div className="w-16 h-16 rounded-lg overflow-hidden">
-            <img src={app.property?.images?.[0]?.url || '/placeholder.jpg'} alt={app.property?.title} className="w-full h-full object-cover" />
+            <img src={app?.property?.images?.[0]?.url || '/placeholder.jpg'} alt={app?.property?.title} className="w-full h-full object-cover" />
           </div>
           <div>
-            <Link to={`/properties/${app.property?._id}`} className="font-semibold text-blue-600 hover:underline">{app.property?.title}</Link>
-            <p className="text-sm text-gray-500">{app.property?.address?.city}, {app.property?.address?.state}</p>
+            <Link to={`/properties/${app?.property?._id}`} className="font-semibold text-blue-600 hover:underline">{app?.property?.title || 'N/A'}</Link>
+            <p className="text-sm text-gray-500">{app?.property?.address?.city || 'N/A'}, {app?.property?.address?.state || 'N/A'}</p>
           </div>
         </div>
       ),
     },
-    { key: 'status', label: 'Status', sortable: true, render: (app) => getStatusBadge(app.status) },
-    { key: 'appliedDate', label: 'Applied Date', sortable: true, render: (app) => new Date(app.createdAt).toLocaleDateString() },
-    { key: 'moveInDate', label: 'Move-in Date', sortable: true, render: (app) => app.moveInDate ? new Date(app.moveInDate).toLocaleDateString() : 'Not specified' },
-    { key: 'rent', label: 'Monthly Rent', sortable: true, render: (app) => `$${app.property?.rent?.amount?.toLocaleString() || 0}` },
+    { key: 'status', label: 'Status', sortable: true, render: (value, app) => getStatusBadge(app?.status) },
+    { key: 'appliedDate', label: 'Applied Date', sortable: true, render: (value, app) => app?.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A' },
+    { key: 'moveInDate', label: 'Move-in Date', sortable: true, render: (value, app) => app?.moveInDate ? new Date(app.moveInDate).toLocaleDateString() : 'Not specified' },
+    { key: 'rent', label: 'Monthly Rent', sortable: true, render: (value, app) => `$${app?.property?.rent?.amount?.toLocaleString() || 0}` },
   ];
 
   return (

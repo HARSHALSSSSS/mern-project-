@@ -17,7 +17,9 @@ const MyContracts = () => {
     try {
       setLoading(true);
       const response = await axios.get('/contracts');
-      setContracts(response.data.data || []);
+      console.log('📄 My Contracts Response:', response.data);
+      // Backend returns: { success, count, contracts }
+      setContracts(response.data.contracts || []);
     } catch (error) {
       console.error('Failed to fetch contracts:', error);
     } finally {
@@ -27,7 +29,7 @@ const MyContracts = () => {
 
   const downloadDocument = async (contractId) => {
     try {
-      const response = await axios.get(`/api/contracts/${contractId}/document`, { responseType: 'blob' });
+      const response = await axios.get(`/contracts/${contractId}/document`, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -37,6 +39,7 @@ const MyContracts = () => {
       link.remove();
     } catch (error) {
       console.error('Failed to download:', error);
+      alert('Failed to download contract document');
     }
   };
 

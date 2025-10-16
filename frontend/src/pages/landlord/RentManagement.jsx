@@ -14,7 +14,9 @@ const RentManagement = () => {
   const fetchPayments = async () => {
     try {
       const response = await axios.get('/payments');
-      setPayments(response.data.data || []);
+      console.log('💰 Landlord Payments Response:', response.data);
+      // Backend returns: { success, count, payments }
+      setPayments(response.data.payments || []);
     } catch (error) {
       console.error('Failed to fetch:', error);
     } finally {
@@ -23,22 +25,22 @@ const RentManagement = () => {
   };
 
   const columns = [
-    { key: 'tenant', label: 'Tenant', render: (p) => p.tenant?.name || 'N/A' },
-    { key: 'property', label: 'Property', render: (p) => p.property?.title },
-    { key: 'amount', label: 'Amount', render: (p) => `$${p.amount?.toLocaleString()}` },
-    { key: 'dueDate', label: 'Due Date', render: (p) => new Date(p.dueDate).toLocaleDateString() },
+    { key: 'tenant', label: 'Tenant', render: (value, payment) => payment?.tenant?.name || 'N/A' },
+    { key: 'property', label: 'Property', render: (value, payment) => payment?.property?.title || 'N/A' },
+    { key: 'amount', label: 'Amount', render: (value, payment) => `$${payment?.amount?.toLocaleString() || 0}` },
+    { key: 'dueDate', label: 'Due Date', render: (value, payment) => payment?.dueDate ? new Date(payment.dueDate).toLocaleDateString() : 'N/A' },
     {
       key: 'status',
       label: 'Status',
-      render: (p) => {
+      render: (value, payment) => {
         const config = {
           paid: { bg: 'bg-green-100', text: 'text-green-800', icon: FaCheckCircle },
           pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: FaClock },
           overdue: { bg: 'bg-red-100', text: 'text-red-800', icon: FaExclamationTriangle },
         };
-        const c = config[p.status] || config.pending;
+        const c = config[payment?.status] || config.pending;
         const Icon = c.icon;
-        return <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold ${c.bg} ${c.text}`}><Icon className="text-xs" /> {p.status}</span>;
+        return <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold ${c.bg} ${c.text}`}><Icon className="text-xs" /> {payment?.status || 'pending'}</span>;
       },
     },
     { key: 'paidDate', label: 'Paid Date', render: (p) => p.paidDate ? new Date(p.paidDate).toLocaleDateString() : '-' },

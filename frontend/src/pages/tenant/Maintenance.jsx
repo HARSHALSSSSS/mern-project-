@@ -26,7 +26,9 @@ const Maintenance = () => {
     try {
       setLoading(true);
       const response = await axios.get('/maintenance');
-      setRequests(response.data.data || []);
+      console.log('🔧 Tenant Maintenance Response:', response.data);
+      // Backend returns: { success, count, maintenanceRequests }
+      setRequests(response.data.maintenanceRequests || []);
     } catch (error) {
       console.error('Failed to fetch requests:', error);
     } finally {

@@ -17,7 +17,9 @@ const Maintenance = () => {
   const fetchRequests = async () => {
     try {
       const response = await axios.get('/maintenance');
-      setRequests(response.data.data || []);
+      console.log('🔧 Landlord Maintenance Response:', response.data);
+      // Backend returns: { success, count, maintenanceRequests }
+      setRequests(response.data.maintenanceRequests || []);
     } catch (error) {
       console.error('Failed to fetch:', error);
     } finally {
@@ -27,11 +29,13 @@ const Maintenance = () => {
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.patch(`/api/maintenance/requests/${id}`, { status });
+      await axios.put(`/maintenance/${id}`, { status });
+      alert('Maintenance status updated successfully!');
       fetchRequests();
       setShowDetailModal(false);
     } catch (error) {
       console.error('Failed to update:', error);
+      alert(error.response?.data?.message || 'Failed to update maintenance status');
     }
   };
 

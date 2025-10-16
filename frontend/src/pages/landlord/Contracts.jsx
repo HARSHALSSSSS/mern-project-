@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
-import { Alert } from 'react-bootstrap';
-import Loading from '../../components/Loading';
-
-const API_URL = process.env.REACT_APP_API_URL || 'https://mern-project-api.onrender.com/api';
+import { FaFileContract, FaCheckCircle, FaTimesCircle, FaCalendarAlt, FaDollarSign } from 'react-icons/fa';
+import Modal from '../../components/Modal';
+import DataTable from '../../components/DataTable';
+import axios from '../../services/axios';
 
 const Contracts = () => {
   const [contracts, setContracts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedContract, setSelectedContract] = useState(null);
-  const [showDetails, setShowDetails] = useState(false);
-  const [error, setError] = useState(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   useEffect(() => {
     fetchContracts();
@@ -23,48 +17,31 @@ const Contracts = () => {
   const fetchContracts = async () => {
     try {
       setLoading(true);
-      setError(null);
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_URL}/contracts`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      console.log('📋 Contracts Response:', response.data);
-
-      // Handle response structure
-      const contractsData = response.data.contracts || response.data.data || [];
+      const response = await axios.get('/contracts');
+      console.log('� Landlord Contracts Response:', response.data);
+      // Backend returns: { success, count, contracts }
+      const contractsData = response.data.contracts || [];
       setContracts(Array.isArray(contractsData) ? contractsData : []);
     } catch (err) {
-      console.error('❌ Error fetching contracts:', err.response?.data || err.message);
-      setError(err.response?.data?.message || 'Failed to load contracts');
+      console.error('❌ Error fetching contracts:', err);
       setContracts([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleTerminate = async (contract) => {
+  const handleTerminate = async (contractId) => {
+    if (!window.confirm('Are you sure you want to terminate this contract?')) return;
+    
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.put(
-        `${API_URL}/contracts/${contract._id}/terminate`,
-        { terminationDate: new Date() },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      if (response.data.success) {
-        alert('Contract terminated successfully');
-        setShowDetails(false);
-        fetchContracts();
-      }
+      await axios.put(`/contracts/${contractId}/terminate`, {});
+      alert('Contract terminated successfully');
+      setShowDetailsModal(false);
+      fetchContracts();
     } catch (err) {
+      console.error('Failed to terminate:', err);
       alert(err.response?.data?.message || 'Failed to terminate contract');
     }
-  };
-
-  const handleViewDetails = (contract) => {
-    setSelectedContract(contract);
-    setShowDetails(true);
   };
 
   const formatCurrency = (amount) => {

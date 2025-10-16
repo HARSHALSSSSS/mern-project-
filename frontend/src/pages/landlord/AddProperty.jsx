@@ -67,6 +67,9 @@ const AddProperty = () => {
     }
     
     console.log('✅ On step 3, proceeding with property creation...');
+    console.log('Images array:', images);
+    console.log('Images count:', images.length);
+    
     setLoading(true);
     try {
       const data = new FormData();
@@ -94,7 +97,24 @@ const AddProperty = () => {
       }
       
       // Handle images
-      images.forEach(img => data.append('images', img));
+      console.log('📸 Adding images to FormData...');
+      images.forEach((img, index) => {
+        console.log(`  Image ${index}:`, {
+          name: img.name,
+          size: img.size,
+          type: img.type
+        });
+        data.append('images', img);
+      });
+      
+      console.log('📋 FormData entries:');
+      for (let [key, value] of data.entries()) {
+        if (key === 'images') {
+          console.log(`  ${key}: [File]`);
+        } else {
+          console.log(`  ${key}: ${value}`);
+        }
+      }
       
       console.log('Submitting property creation...');
       const response = await axios.post('/properties', data, {

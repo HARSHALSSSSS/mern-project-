@@ -137,6 +137,14 @@ exports.getPropertyById = async (req, res) => {
 // @access  Private/Landlord
 exports.createProperty = async (req, res) => {
   try {
+    // DEBUGGING: Log all request details
+    console.log('📸 CREATE PROPERTY - REQUEST DETAILS:');
+    console.log('Body:', req.body);
+    console.log('Files:', req.files);
+    console.log('Files length:', req.files?.length);
+    console.log('Headers:', req.headers);
+    console.log('Content-Type:', req.headers['content-type']);
+
     const propertyData = {
       ...req.body,
       landlord: req.user._id
@@ -161,10 +169,15 @@ exports.createProperty = async (req, res) => {
 
     // Handle image uploads
     if (req.files && req.files.length > 0) {
+      console.log('✅ IMAGES RECEIVED! Count:', req.files.length);
       propertyData.images = req.files.map(file => ({
         url: `/uploads/${file.filename}`,
         publicId: file.filename
       }));
+      console.log('📷 Saved image paths:', propertyData.images);
+    } else {
+      console.log('⚠️ NO FILES RECEIVED - req.files:', req.files);
+      propertyData.images = [];
     }
 
     const property = await Property.create(propertyData);
@@ -195,6 +208,12 @@ exports.createProperty = async (req, res) => {
 // @access  Private/Landlord
 exports.updateProperty = async (req, res) => {
   try {
+    console.log('📸 UPDATE PROPERTY - REQUEST DETAILS:');
+    console.log('Property ID:', req.params.id);
+    console.log('Body:', req.body);
+    console.log('Files:', req.files);
+    console.log('Files length:', req.files?.length);
+
     let property = await Property.findById(req.params.id);
 
     if (!property) {
@@ -214,11 +233,15 @@ exports.updateProperty = async (req, res) => {
 
     // Handle new image uploads
     if (req.files && req.files.length > 0) {
+      console.log('✅ NEW IMAGES RECEIVED! Count:', req.files.length);
       const newImages = req.files.map(file => ({
         url: `/uploads/${file.filename}`,
         publicId: file.filename
       }));
       req.body.images = [...(property.images || []), ...newImages];
+      console.log('📷 Updated image paths:', req.body.images);
+    } else {
+      console.log('⚠️ NO NEW FILES - keeping existing images');
     }
 
     property = await Property.findByIdAndUpdate(req.params.id, req.body, {

@@ -95,10 +95,24 @@ exports.optionalAuth = async (req, res, next) => {
 // Role-based authorization
 exports.authorize = (...roles) => {
   return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authenticated. Please login first.'
+      });
+    }
+    
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: `User role '${req.user.role}' is not authorized to access this route`
+        message: `User role '${req.user.role}' is not authorized to access this route. Required role(s): ${roles.join(', ')}`,
+        yourRole: req.user.role,
+        requiredRoles: roles,
+        suggestion: req.user.role === 'tenant' && roles.includes('landlord') 
+          ? 'You are logged in as a tenant. Please logout and login with your landlord account.'
+          : req.user.role === 'landlord' && roles.includes('tenant')
+          ? 'You are logged in as a landlord. Please logout and login with your tenant account.'
+          : 'Please login with the correct account type.'
       });
     }
     next();

@@ -162,4 +162,56 @@ router.get('/db-stats', async (req, res) => {
   }
 });
 
+// @desc    Check current logged in user (for debugging)
+// @route   GET /api/setup/whoami  
+// @access  Public
+router.get('/whoami', async (req, res) => {
+  try {
+    // Try to get user from token if provided
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    if (!token) {
+      return res.status(200).json({
+        success: true,
+        authenticated: false,
+        message: 'No token provided - not logged in'
+      });
+    }
+
+    const jwt = require('jsonwebtoken');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        authenticated: false,
+        message: 'Token invalid - user not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      authenticated: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: user.status
+      },
+      message: `You are logged in as: ${user.name} (${user.role})`
+    });
+
+  } catch (error) {
+    console.error('WhoAmI error:', error);
+    res.status(200).json({
+      success: false,
+      authenticated: false,
+      message: 'Invalid or expired token',
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;

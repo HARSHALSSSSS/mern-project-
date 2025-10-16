@@ -29,7 +29,7 @@ const Maintenance = () => {
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.put(`/maintenance/${id}`, { status });
+      await axios.put(`/maintenance/${id}/status`, { status });
       alert('Maintenance status updated successfully!');
       fetchRequests();
       setShowDetailModal(false);

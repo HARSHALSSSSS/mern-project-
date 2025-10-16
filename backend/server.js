@@ -33,7 +33,9 @@ const io = new Server(server, {
 app.set('io', io);
 
 // Middleware
-app.use(helmet()); // Security headers
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" } // Allow CORS for static files
+}));
 app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
